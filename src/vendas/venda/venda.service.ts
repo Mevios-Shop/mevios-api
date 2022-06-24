@@ -20,7 +20,11 @@ export class VendaService {
     }
 
     buscarVendas(): Promise<Venda[]> {
-        return this.VendaRepository.find()
+        return this.VendaRepository.find({
+            order: {
+                data: "DESC"
+            }
+        })
     }
 
     buscarVendaPorId(id: number): Promise<Venda> {
