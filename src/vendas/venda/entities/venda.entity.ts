@@ -24,12 +24,12 @@ export class Venda {
     @Column({ unique: true, nullable: true, default: 'N/A' })
     codigo_pedido: string
 
-    @ManyToOne(type => Plataforma, plataforma => plataforma.id, { nullable: true })
+    @ManyToOne(type => Plataforma, plataforma => plataforma.id, { nullable: true, eager: true })
     @IsNotEmpty()
     @IsNumber()
     plataforma: number
 
-    @ManyToOne(type => StatusVenda, status_venda => status_venda.id, { nullable: false })
+    @ManyToOne(type => StatusVenda, status_venda => status_venda.id, { nullable: false, eager: true })
     @IsNotEmpty()
     @IsNumber()
     status_venda: number
