@@ -19,7 +19,7 @@ export class EstoqueService {
     }
 
     buscarPorId(id: number): Promise<Estoque> {
-        return this.produtoRepository.findOne(id)
+        return this.produtoRepository.findOneBy({id})
     }
 
     buscar_produtos_disponiveis_agrupados(): Promise<any[]> {
@@ -62,7 +62,7 @@ export class EstoqueService {
         if (!(await resultadoAtualizacao).affected) {
             throw new EntityNotFoundError(Estoque, id)
         }
-        return this.produtoRepository.findOne(id)
+        return this.produtoRepository.findOneBy({id})
     }
 
     async deletar(id: number): Promise<any>{

@@ -24,15 +24,16 @@ export class VariacaoProdutoService {
         })
     }
 
-    buscarVariacaoPorId(id: string): Promise<VariacaoProduto> {
-        return this.variacaoProdutoRepository.findOne(id)
+    buscarVariacaoPorId(id: number): Promise<VariacaoProduto> {
+        
+        return this.variacaoProdutoRepository.findOneBy({id})
     }
 
-    buscarVariacoesPorIdProduto(produtoId: string): Promise<VariacaoProduto[]>{
+    buscarVariacoesPorIdProduto(produtoId: number): Promise<VariacaoProduto[]>{
         
         return this.variacaoProdutoRepository.find({ 
             where: { 
-                produto: `${produtoId}` 
+                produto: produtoId 
             },
             order: {
                 descricao: "ASC"
@@ -50,7 +51,7 @@ export class VariacaoProdutoService {
         if (!(await resultadoAtualizacao).affected) {
             throw new EntityNotFoundError(VariacaoProduto, id)
         }
-        return this.variacaoProdutoRepository.findOne(id)
+        return this.variacaoProdutoRepository.findOneBy({id})
     }
 
     async deletar(id: string) {

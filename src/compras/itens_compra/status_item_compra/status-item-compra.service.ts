@@ -21,7 +21,7 @@ export class StatusItemCompraService {
     }
 
     buscarStatusItemCompraPorId(id: number): Promise<StatusItemCompra> {
-        return this.statusItemCompraRepository.findOne(id)
+        return this.statusItemCompraRepository.findOneBy({id})
     }
 
     inserir(inserirStatusItemCompraDto: InserirStatusItemCompraDto) {
@@ -37,7 +37,7 @@ export class StatusItemCompraService {
             throw new EntityNotFoundError(StatusItemCompra, id)
         }
 
-        return this.statusItemCompraRepository.findOne(id)
+        return this.statusItemCompraRepository.findOneBy({id})
     }
 
     async deletar(id: number) {

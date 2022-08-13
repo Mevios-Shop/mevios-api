@@ -25,12 +25,12 @@ export class ComprasService {
     }
 
     buscarCompraPorId(id: number): Promise<Compra> {
-        return this.compraRepository.findOne(id)
+        return this.compraRepository.findOneBy({id})
     }
 
     buscarComprasPorStatusCompraId(id: number) {
         return this.compraRepository.find({ 
-            where: { status_compra: `${id}`}, 
+            where: { status_compra: id}, 
             order: {
             data: "DESC"
         } })
@@ -49,7 +49,7 @@ export class ComprasService {
             throw new EntityNotFoundError(Compra, id)
         }
 
-        return this.compraRepository.findOne(id)
+        return this.compraRepository.findOneBy({id})
     }
 
     async deletar(id: number) {

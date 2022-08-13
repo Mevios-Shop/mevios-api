@@ -17,11 +17,11 @@ export class ItemCompraService {
     }
 
     buscarPorIdCompra(compraId: number): Promise<ItemCompra[]> {
-        return this.itemCompraRepository.find({ where: { compra: `${compraId}` } })
+        return this.itemCompraRepository.find({ where: { compra: compraId } })
     }
 
     buscarPorId(id: number): Promise<ItemCompra> {
-        return this.itemCompraRepository.findOne(id)
+        return this.itemCompraRepository.findOneBy({id})
     }
 
     inserir(inserirItemCompraDto: InserirItemCompraDto) {
@@ -49,7 +49,7 @@ export class ItemCompraService {
             throw new EntityNotFoundError(ItemCompra, id)
         }
 
-        return this.itemCompraRepository.findOne(id)
+        return this.itemCompraRepository.findOneBy({id})
     }
 
     async deletarPorIdCompra(compraId: number) {

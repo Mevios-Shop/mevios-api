@@ -26,7 +26,7 @@ export class PlataformasService {
     }
 
     buscarPorId(id: number): Promise<Plataforma> {
-        return this.plataformaRepository.findOne(id)
+        return this.plataformaRepository.findOneBy({id})
     }
 
     buscarPorDescricao(descricao: string): Promise<Plataforma> {
@@ -38,7 +38,7 @@ export class PlataformasService {
         if (!(await resultadoAtualizacao).affected) {
             throw new EntityNotFoundError(Plataforma, id)
         }
-        return this.plataformaRepository.findOne(id)
+        return this.plataformaRepository.findOneBy({id})
     }
 
     async deletar(id: number): Promise<any>{

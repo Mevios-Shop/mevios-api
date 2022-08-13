@@ -15,6 +15,6 @@ export class VariacoesProdutoController {
     
     @Get(':produtoId')
     buscarVariacoesPorProduto(@Param('produtoId') produtoId: string): Promise<VariacaoProduto[]> {
-        return this.variacaoProdutoService.buscarVariacoesPorIdProduto(produtoId)
+        return this.variacaoProdutoService.buscarVariacoesPorIdProduto(Number(produtoId))
     }
 }

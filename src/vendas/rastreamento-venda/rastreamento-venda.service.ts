@@ -17,7 +17,7 @@ export class RastreamentoVendaService {
     }
 
     buscarPorId(id: number): Promise<RastreamentoVenda> {
-        return this.rastreamentoVendaRepository.findOne(id)
+        return this.rastreamentoVendaRepository.findOneBy({id})
     }
 
     buscarPorVendaId(vendaId: number): Promise<RastreamentoVenda[]> {
@@ -37,7 +37,7 @@ export class RastreamentoVendaService {
             throw new EntityNotFoundError(RastreamentoVenda, id)
         }
 
-        return this.rastreamentoVendaRepository.findOne(id)
+        return this.rastreamentoVendaRepository.findOneBy({id})
     }
 
     async deletar(id: number) {
