@@ -10,13 +10,12 @@ import { PlataformasModule } from './plataformas/plataformas.module';
 
 @Module({
   imports: [
-    UsuariosModule,
-    ProdutosModule,
-    VendasModule,
-    ComprasModule,
     TypeOrmModule.forRoot(),
+    ComprasModule,
+    PlataformasModule,
     ProdutosModule,
-    PlataformasModule
+    UsuariosModule,
+    VendasModule
   ],
   controllers: [
     AppController],
