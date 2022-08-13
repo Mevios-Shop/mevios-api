@@ -1,10 +1,8 @@
-import { LocalAuthGuard } from './../../auth/local-auth.guard';
-import { JwtAuthGuard } from './../../auth/jwt-auth.guard';
 /*
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
 import { AtualizarProdutoDto } from './dto/atualizar-produto.dto';
 import { InserirProdutoDto } from './dto/inserir-produto.dto';
 import { Produto } from './entities/produto.entity';
