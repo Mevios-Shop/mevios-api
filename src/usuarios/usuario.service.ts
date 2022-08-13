@@ -17,12 +17,13 @@ export class UsuarioService {
 
     buscarPorId(id: number): Promise<Usuario> {
 
-        return this.usuarioRepository.findOne(id) 
+        return this.usuarioRepository.findOneBy({id})
     }
 
+    /*
     buscarPorEmail(email: string): Promise<Usuario> {
         return this.usuarioRepository.findOne({email})
-    }
+    }*/
 
     async inserir(inserirUsuarioDto: InserirUsuarioDto) {
         const usuario = this.usuarioRepository.create(inserirUsuarioDto)
@@ -37,7 +38,7 @@ export class UsuarioService {
         if (!(await resultadoAtualizacao).affected) {
             throw new EntityNotFoundError(Usuario, id)
         }
-        return this.usuarioRepository.findOne(id)
+        return this.usuarioRepository.findOneBy({id})
     }
 
     async deletar(id: number): Promise<any>{

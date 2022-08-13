@@ -28,7 +28,7 @@ export class VendaService {
     }
 
     buscarVendaPorId(id: number): Promise<Venda> {
-        return this.VendaRepository.findOne(id)
+        return this.VendaRepository.findOneBy({id})
     }
 
     buscarVendasPorIdPlataforma(id_plataforma: number): Promise<Venda[]> {
@@ -36,7 +36,7 @@ export class VendaService {
     }
 
     buscarVendaPorPedido(codigo_pedido: number): Promise<Venda> {
-        return this.VendaRepository.findOne({ where: { codigo_pedido: codigo_pedido } })
+        return this.VendaRepository.findOne({ where: { codigo_pedido: codigo_pedido.toString() } })
     }
 
     inserir(inserirVendaDto: InserirVendaDto) {
@@ -93,7 +93,7 @@ export class VendaService {
             throw new EntityNotFoundError(Venda, id)
         }
 
-        return this.VendaRepository.findOne(id)
+        return this.VendaRepository.findOneBy({ id })
     }
 
     async deletar(id: number) {

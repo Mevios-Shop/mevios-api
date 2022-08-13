@@ -19,7 +19,7 @@ export class SkuProdutoService {
     }
 
     buscarPorId(id: number): Promise<SkuProduto> {
-        return this.skuProdutoRepository.findOne(id)
+        return this.skuProdutoRepository.findOneBy({id})
     }
 
     buscarVariacaoPorSku(sku: string, plataformaId: number): Promise<SkuProduto> {
@@ -36,7 +36,7 @@ export class SkuProdutoService {
         if (!(await resultadoAtualizacao).affected) {
             throw new EntityNotFoundError(SkuProduto, id)
         }
-        return this.skuProdutoRepository.findOne(id)
+        return this.skuProdutoRepository.findOneBy({id})
     }
 
     async deletar(id: number): Promise<any>{

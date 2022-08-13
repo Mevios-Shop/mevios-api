@@ -16,8 +16,8 @@ export class ProdutosService {
 
     buscarTodos(): Promise<Produto[]> {
         return this.produtoRepository.find({
-            "where": {
-                habilitado: 1
+            where: {
+                habilitado: true
             },
             order: {
                 nome: "ASC"
@@ -26,7 +26,12 @@ export class ProdutosService {
     }
 
     buscarPorId(id: number): Promise<Produto> {
-        return this.produtoRepository.findOne(id, {"where": {habilitado: 1}})
+        return this.produtoRepository.findOne({
+            where: {
+                id,
+                habilitado: true
+            }
+        })
     }
 
     inserir(inserirProdutoDto: InserirProdutoDto) {
@@ -39,12 +44,12 @@ export class ProdutosService {
         if (!(await resultadoAtualizacao).affected) {
             throw new EntityNotFoundError(Produto, id)
         }
-        return this.produtoRepository.findOne(id)
+        return this.produtoRepository.findOneBy({id})
     }
 
     async deletar(id: number): Promise<any>{
 
-        let atualizarProdutoDto: AtualizarProdutoDto = await this.produtoRepository.findOne(id)
+        let atualizarProdutoDto: AtualizarProdutoDto = await this.produtoRepository.findOneBy({id})
         
         if (!atualizarProdutoDto) {
             throw new EntityNotFoundError(Produto, id)

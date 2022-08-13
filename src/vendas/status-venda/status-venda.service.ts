@@ -21,7 +21,7 @@ export class StatusVendaService {
     }
 
     buscarStatusVendaPorId(id: number): Promise<StatusVenda> {
-        return this.statusVendaRepository.findOne(id)
+        return this.statusVendaRepository.findOneBy({id})
     }
 
     inserir(inserirStatusVendaDto: InserirStatusVendaDto) {
@@ -37,7 +37,7 @@ export class StatusVendaService {
             throw new EntityNotFoundError(StatusVenda, id)
         }
 
-        return this.statusVendaRepository.findOne(id)
+        return this.statusVendaRepository.findOneBy({id})
     }
 
     async deletar(id: number) {

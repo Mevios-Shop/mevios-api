@@ -21,7 +21,7 @@ export class StatusRastreamentoVendaService {
     }
 
     buscarStatusRastreamentoVendaPorId(id: number): Promise<StatusRastreamentoVenda> {
-        return this.statusRastreamentoVendaRepository.findOne(id)
+        return this.statusRastreamentoVendaRepository.findOneBy({id})
     }
 
     inserir(inserirStatusVendaDto: InserirStatusRastreamentoVendaDto) {
@@ -37,7 +37,7 @@ export class StatusRastreamentoVendaService {
             throw new EntityNotFoundError(StatusRastreamentoVenda, id)
         }
 
-        return this.statusRastreamentoVendaRepository.findOne(id)
+        return this.statusRastreamentoVendaRepository.findOneBy({id})
     }
 
     async deletar(id: number) {
