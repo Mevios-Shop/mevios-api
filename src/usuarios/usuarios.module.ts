@@ -6,10 +6,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 https://docs.nestjs.com/modules
 */
 
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Usuario])],
+    imports: [
+        ConfigModule,
+        TypeOrmModule.forFeature([Usuario]),
+        forwardRef(() => AuthModule)
+    ],
     controllers: [ UsuarioController ],
     providers: [ UsuarioService ],
     exports: [ UsuarioService ]

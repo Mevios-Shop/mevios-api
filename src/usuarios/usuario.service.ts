@@ -1,32 +1,39 @@
 import { AtualizarUsuarioDto } from './dto/atualizar-usuario.dto';
 import { InserirUsuarioDto } from './dto/inserir-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
+import * as bcrypt from 'bcrypt';
+
 /*
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, EntityNotFoundError } from 'typeorm';
-import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsuarioService { 
 
-    constructor(@InjectRepository(Usuario) private usuarioRepository: Repository<Usuario>) {}
+    constructor(
+        @Inject(ConfigService) private readonly configService: ConfigService,
+        @InjectRepository(Usuario) private usuarioRepository: Repository<Usuario>
+        ) {}
 
     buscarPorId(id: number): Promise<Usuario> {
 
         return this.usuarioRepository.findOneBy({id})
     }
 
-    /*
     buscarPorEmail(email: string): Promise<Usuario> {
-        return this.usuarioRepository.findOne({email})
-    }*/
+        return this.usuarioRepository.findOneBy({email})
+    }
 
     async inserir(inserirUsuarioDto: InserirUsuarioDto) {
-        const usuario = this.usuarioRepository.create(inserirUsuarioDto)
+
+        inserirUsuarioDto.senha = await bcrypt.hash(inserirUsuarioDto.senha, 10);
+
+        const usuario = await this.usuarioRepository.create(inserirUsuarioDto)
 
         return this.usuarioRepository.save(usuario)
     }
