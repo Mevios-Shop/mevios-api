@@ -8,6 +8,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PlataformasModule } from './plataformas/plataformas.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,8 +19,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         type: 'mysql',
         host: configService.get('MYSQL_HOST'),
         port: +configService.get('MYSQL_PORT'),
-        username: configService.get<string>('MYSQL_USERNAME'),
-        password: configService.get<string>('MYSQL_PASSWORD'),
+        username: configService.get('MYSQL_USERNAME'),
+        password: configService.get('MYSQL_PASSWORD'),
         database: configService.get('MYSQL_DATABASE'),
         entities: [__dirname + configService.get('MYSQL_ENTITIES')],
         autoLoadEntities: Boolean(Number(configService.get<boolean>('MYSQL_AUTO_LOAD_ENTITIES'))),
@@ -27,6 +28,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       }),
       inject: [ConfigService],
     }),
+    AuthModule,
     ComprasModule,
     PlataformasModule,
     ProdutosModule,
