@@ -14,34 +14,33 @@ import { AuthenticateDto } from './dto/authenticate.dto';
 @Controller('usuario')
 export class UsuarioController {
 
-    constructor(
-        private readonly authService: AuthService,
-        private usuarioService: UsuarioService
-    ) {
-
-    }
+    constructor(private usuarioService: UsuarioService) { }
 
     @Post()
     async inserir(@Body() inserirUsuarioDto: InserirUsuarioDto) {
         return await this.usuarioService.inserir(inserirUsuarioDto)
     }
 
+    /*
     @Get(':id')
-    buscarProduto(@Param() params): Promise<Usuario> {
+    buscarPorId(@Param() params): Promise<Usuario> {
         return this.usuarioService.buscarPorId(params.id)
-    }
+    }*/
 
     @Patch(':id')
-    atualizar(@Param('id') id: string, @Body() atualizarUsuarioDto: AtualizarUsuarioDto) {
-        return this.usuarioService.atualizar(+id, atualizarUsuarioDto)
+    @UseGuards(JwtAuthGuard)
+    async atualizar(@Param('id') id: string, @Body() atualizarUsuarioDto: AtualizarUsuarioDto) {
+        return await this.usuarioService.atualizar(+id, atualizarUsuarioDto)
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard)
     @HttpCode(204)
-    deletar(@Param('id') id: string) {
-        return this.usuarioService.deletar(+id)
+    async deletar(@Param('id') id: string) {
+        return await this.usuarioService.deletar(+id)
     }
 
+    /*
     @Post('authenticate')
     async login(@Body() authenticateDto: AuthenticateDto) {
 
@@ -53,5 +52,5 @@ export class UsuarioController {
 
         const token = await this.authService.login(usuario)
         return token
-    }
+    }*/
 }

@@ -2,8 +2,9 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UsuarioService } from 'src/usuarios/usuario.service';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { AtualizarPlataformaDto } from './dto/atualizar-plataforma.dto';
 import { InserirPlataformaDto } from './dto/inserir-plataforma.dto';
@@ -12,40 +13,86 @@ import { Plataforma } from './entities/plataforma.entity';
 @Injectable()
 export class PlataformasService {
 
-    constructor(@InjectRepository(Plataforma) private plataformaRepository: Repository<Plataforma>) {
-        
+    constructor(
+        @InjectRepository(Plataforma) private plataformaRepository: Repository<Plataforma>,
+        @Inject(forwardRef(() => UsuarioService))
+        private readonly usuarioService: UsuarioService
+    ) {
+
     }
 
-    inserir(inserirPlataformaDto: InserirPlataformaDto) {
-        const plataforma = this.plataformaRepository.create(inserirPlataformaDto)
-        return this.plataformaRepository.save(plataforma)
-    }
+    async inserir(inserirPlataformaDto: InserirPlataformaDto, user: any): Promise<Plataforma> {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
-    buscarTodos(): Promise<Plataforma[]> {
-        return this.plataformaRepository.find()
-    }
-
-    buscarPorId(id: number): Promise<Plataforma> {
-        return this.plataformaRepository.findOneBy({id})
-    }
-
-    buscarPorDescricao(descricao: string): Promise<Plataforma> {
-        return this.plataformaRepository.findOne({ where: { descricao: `${descricao}` }})
-    }
-
-    async atualizar(id: number, atualizarPlataformaDto: AtualizarPlataformaDto) {
-        const resultadoAtualizacao = this.plataformaRepository.update(id, atualizarPlataformaDto)
-        if (!(await resultadoAtualizacao).affected) {
-            throw new EntityNotFoundError(Plataforma, id)
+        if (usuario) {
+            inserirPlataformaDto.usuario = usuario.id
+            const plataforma = this.plataformaRepository.create(inserirPlataformaDto)
+            return await this.plataformaRepository.save(plataforma)
         }
-        return this.plataformaRepository.findOneBy({id})
     }
 
-    async deletar(id: number): Promise<any>{
+    async buscarTodos(user: any): Promise<Plataforma[]> {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
-        const resultadoDelecao = await this.plataformaRepository.delete(id)
-        if (!(await resultadoDelecao).affected) {
-            throw new EntityNotFoundError(Plataforma, id)
+        if (usuario) {
+            return await this.plataformaRepository
+                .createQueryBuilder("plataforma")
+                .where("plataforma.usuarioId = :usuarioId", { usuarioId: usuario.id })
+                .orderBy('plataforma.descricao', 'ASC')
+                .getMany()
         }
+        return []
+    }
+
+    async buscarPorId(id: number, user: any): Promise<Plataforma> {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
+
+        if (usuario) {
+            return await this.plataformaRepository
+                .createQueryBuilder("plataforma")
+                .where("compra.id = :id", { id: id })
+                .andWhere("compra.usuarioId = :usuarioId", { usuarioId: usuario.id })
+                .getOne()
+        }
+        return null
+    }
+
+    async buscarPorDescricao(descricao: string, user: any): Promise<Plataforma> {
+        let usuario: any = await this.usuarioService.buscarPorEmail(user.email)
+
+        if (usuario) {
+            return await this.plataformaRepository
+                .createQueryBuilder("plataforma")
+                .where("plataforma.descricao = :descricao", { descricao: descricao })
+                .andWhere("plataforma.usuarioId = :usuarioId", { usuarioId: usuario.id })
+                .orderBy('plataforma.descricao', 'ASC')
+                .getOne()
+        }
+        return null
+    }
+
+    async atualizar(id: number, atualizarPlataformaDto: AtualizarPlataformaDto, user: any) {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
+
+        if (usuario) {
+            const resultadoAtualizacao = await this.plataformaRepository.update({ id: id, usuario: usuario.id }, atualizarPlataformaDto)
+            if (!(await resultadoAtualizacao).affected) {
+                throw new EntityNotFoundError(Plataforma, id)
+            }
+            return await this.plataformaRepository.findOneBy({ id })
+        }
+        return null
+    }
+
+    async deletar(id: number, user: any): Promise<any> {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
+
+        if (usuario) {
+            const resultadoDelecao = await this.plataformaRepository.delete({ id: id, usuario: usuario.id })
+            if (!(await resultadoDelecao).affected) {
+                throw new EntityNotFoundError(Plataforma, id)
+            }
+        }
+        return null
     }
 }

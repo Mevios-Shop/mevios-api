@@ -5,7 +5,8 @@ import { ItemVendaService } from './item-venda.service';
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 
 @Controller('item_venda')
 export class ItemVendaController { 
@@ -14,24 +15,27 @@ export class ItemVendaController {
         
     }
 
-    @Post()   
-    inserir(@Body() inserirItemVendaDto: InserirItemVendaDto) {
-        return this.itemVendaService.inserir(inserirItemVendaDto)
+    @Post() 
+    @UseGuards(JwtAuthGuard)
+    async inserir(@Body() inserirItemVendaDto: InserirItemVendaDto, @Request() req) {
+        return await this.itemVendaService.inserir(inserirItemVendaDto, req.user)
     }
 
     @Get(':id')
-    buscarPorId(@Param() params) {
-        return this.itemVendaService.buscarPorId(params.id)
+    @UseGuards(JwtAuthGuard)
+    async buscarPorId(@Param() params, @Request() req) {
+        return await this.itemVendaService.buscarPorId(params.id, req.user)
     }
 
     @Patch(':id')
-    atualizar(@Param('id') id: number, @Body() atualizarItemVendaDto: AtualizarItemVendaDto) {
-        return this.itemVendaService.atualizar(id, atualizarItemVendaDto)
+    async atualizar(@Param('id') id: number, @Body() atualizarItemVendaDto: AtualizarItemVendaDto, @Request() req) {
+        return await this.itemVendaService.atualizar(id, atualizarItemVendaDto, req.user)
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard)
     @HttpCode(204)
-    deletar(@Param('id') id: number) {
-        return this.itemVendaService.deletar(id)
+    async deletar(@Param('id') id: number, @Request() req) {
+        return await this.itemVendaService.deletar(id, req.user)
     }
 }

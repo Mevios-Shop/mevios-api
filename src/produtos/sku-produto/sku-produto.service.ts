@@ -6,44 +6,103 @@ import { InjectRepository } from '@nestjs/typeorm';
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Repository, EntityNotFoundError } from 'typeorm';
+import { UsuarioService } from 'src/usuarios/usuario.service';
 
 @Injectable()
 export class SkuProdutoService {
 
-    constructor(@InjectRepository(SkuProduto) private skuProdutoRepository: Repository<SkuProduto>) {}
+    constructor(
+        @InjectRepository(SkuProduto) private skuProdutoRepository: Repository<SkuProduto>,
+        @Inject(forwardRef(() => UsuarioService))
+        private readonly usuarioService: UsuarioService
+    ) { }
 
-    buscarTodos(): Promise<SkuProduto[]> {
-        return this.skuProdutoRepository.find()
-    }
+    async buscarTodos(user: any): Promise<SkuProduto[]> {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
-    buscarPorId(id: number): Promise<SkuProduto> {
-        return this.skuProdutoRepository.findOneBy({id})
-    }
-
-    buscarVariacaoPorSku(sku: string, plataformaId: number): Promise<SkuProduto> {
-        return this.skuProdutoRepository.findOne({ where: { sku: sku, plataforma: plataformaId }})
-    }
-
-    inserir(inserirSkuProdutoDto: InserirSkuProdutoDto) {
-        const estoque = this.skuProdutoRepository.create(inserirSkuProdutoDto)
-        return this.skuProdutoRepository.save(estoque)
-    }
-
-    async atualizar(id: number,atualizarSkuProdutoDto: AtualizarSkuProdutoDto) {
-        const resultadoAtualizacao = this.skuProdutoRepository.update(id, atualizarSkuProdutoDto)
-        if (!(await resultadoAtualizacao).affected) {
-            throw new EntityNotFoundError(SkuProduto, id)
+        if (usuario) {
+            return await this.skuProdutoRepository
+                .createQueryBuilder("sku_produto")
+                .leftJoinAndSelect("sku_produto.plataforma", "plataforma")
+                .leftJoinAndSelect("sku_produto.variacao_produto", "variacao_produto")
+                .where("sku_produto.usuarioId = :usuarioId", { usuarioId: usuario.id })
+                .getMany()
         }
-        return this.skuProdutoRepository.findOneBy({id})
+        return null
     }
 
-    async deletar(id: number): Promise<any>{
+    async buscarPorId(id: number, user: any): Promise<SkuProduto> {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
+        if (usuario) {
+            return await this.skuProdutoRepository
+                .createQueryBuilder("sku_produto")
+                .leftJoinAndSelect("sku_produto.plataforma", "plataforma")
+                .leftJoinAndSelect("sku_produto.variacao_produto", "variacao_produto")
+                .where("sku_produto.usuarioId = :usuarioId", { usuarioId: usuario.id })
+                .andWhere("sku_produto.id = :id", { id: id })
+                .getOne()
+        }
+        return null
+    }
+
+    async buscarVariacaoPorSku(sku: string, plataformaId: number, user: any): Promise<SkuProduto> {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
+
+        if (usuario) {
+            return await this.skuProdutoRepository
+                .createQueryBuilder("sku_produto")
+                .leftJoinAndSelect("sku_produto.plataforma", "plataforma")
+                .leftJoinAndSelect("sku_produto.variacao_produto", "variacao_produto")
+                .where("sku_produto.usuarioId = :usuarioId", { usuarioId: usuario.id })
+                .andWhere("sku_produto.sku = :sku", { sku: sku })
+                .getOne()
+        }
+        return null
+    }
+
+    async inserir(inserirSkuProdutoDto: InserirSkuProdutoDto, user: any) {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
+
+        if (usuario) {
+            inserirSkuProdutoDto.usuario = usuario.id
+            const sku_produto = this.skuProdutoRepository.create(inserirSkuProdutoDto)
+            return await this.skuProdutoRepository.save(sku_produto)
+        }
+        return null
+    }
+
+    async atualizar(id: number, atualizarSkuProdutoDto: AtualizarSkuProdutoDto, user: any) {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
+
+        if (usuario) {
+            const resultado = await this.skuProdutoRepository.update(id, atualizarSkuProdutoDto)
+            if (resultado.affected === 0) {
+                throw new EntityNotFoundError(SkuProduto, id)
+            } else {
+                return this.skuProdutoRepository.findOneBy({ id })
+            }
+        }
+        return null
+    }
+
+    async deletar(id: number, user: any): Promise<any> {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
+
+        if (usuario) {
+            const resultado = await this.skuProdutoRepository.delete({ id: id, usuario: usuario.id })
+            if (resultado.affected === 0) {
+                throw new EntityNotFoundError(SkuProduto, id)
+            }
+        }
+        return null
+
+        /*
         const resultadoDelecao = await this.skuProdutoRepository.delete(id)
         if (!(await resultadoDelecao).affected) {
             throw new EntityNotFoundError(SkuProduto, id)
-        }
+        }*/
     }
 }

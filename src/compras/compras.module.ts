@@ -2,9 +2,10 @@
 https://docs.nestjs.com/modules
 */
 
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Plataforma } from 'src/plataformas/entities/plataforma.entity';
+import { UsuariosModule } from 'src/usuarios/usuarios.module';
 import { CompraPorStatusController } from './compra/compra-por-status.controller';
 import { ComprasController } from './compra/compras.controller';
 import { ComprasService } from './compra/compras.service';
@@ -21,19 +22,30 @@ import { StatusCompraController } from './status_compra/status-compra.controller
 import { StatusCompraService } from './status_compra/status-compra.service';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Compra, StatusCompra, Plataforma, ItemCompra, StatusItemCompra])],
+    imports: [
+        TypeOrmModule.forFeature(
+            [
+                Compra,
+                StatusCompra,
+                Plataforma,
+                ItemCompra,
+                StatusItemCompra
+            ]
+        ),
+        forwardRef(() => UsuariosModule)
+    ],
     controllers: [
-        ComprasController, 
-        StatusCompraController, 
-        ItemCompraController, 
-        ItensCompraController, 
-        StatusItemCompraController, 
+        ComprasController,
+        StatusCompraController,
+        ItemCompraController,
+        ItensCompraController,
+        StatusItemCompraController,
         CompraPorStatusController
     ],
     providers: [
-        ComprasService, 
-        StatusCompraService, 
-        ItemCompraService, 
+        ComprasService,
+        StatusCompraService,
+        ItemCompraService,
         StatusItemCompraService
     ]
 })

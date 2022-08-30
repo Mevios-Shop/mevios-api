@@ -5,7 +5,8 @@ import { StatusVendaService } from './status-venda.service';
 /*
 https://docs.nestjs.com/controllers#controllers
 */
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 
 @Controller('status_venda')
 export class StatusVendaController {
@@ -15,28 +16,33 @@ export class StatusVendaController {
     }
 
     @Post()
-    inserir(@Body() inserirStatusVendaDto: InserirStatusVendaDto) {
-        return this.statusVendaService.inserir(inserirStatusVendaDto)
+    @UseGuards(JwtAuthGuard)
+    async inserir(@Body() inserirStatusVendaDto: InserirStatusVendaDto, @Request() req) {
+        return await this.statusVendaService.inserir(inserirStatusVendaDto, req.user)
     }
 
     @Get()
-    buscarStatusVenda(): Promise<StatusVenda[]> {
-        return this.statusVendaService.buscarStatusVenda()
+    @UseGuards(JwtAuthGuard)
+    async buscarStatusVenda(@Request() req): Promise<StatusVenda[]> {
+        return await this.statusVendaService.buscarStatusVenda(req.user)
     }
 
     @Get(':id')
-    buscarStatusVendaPorId(@Param() params) {
-        return this.statusVendaService.buscarStatusVendaPorId(params.id)
+    @UseGuards(JwtAuthGuard)
+    async buscarStatusVendaPorId(@Param() params, @Request() req) {
+        return await this.statusVendaService.buscarStatusVendaPorId(params.id, req.user)
     }
 
     @Patch(':id')
-    atualizar(@Param('id') id: number, @Body() atualizarStatusVendaDto: AtualizarStatusVendaDto) {
-        return this.statusVendaService.atualizar(id, atualizarStatusVendaDto)
+    @UseGuards(JwtAuthGuard)
+    async atualizar(@Param('id') id: number, @Body() atualizarStatusVendaDto: AtualizarStatusVendaDto, @Request() req) {
+        return await this.statusVendaService.atualizar(id, atualizarStatusVendaDto, req.user)
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard)
     @HttpCode(204)
-    deletar(@Param('id') id: number) {
-        return this.statusVendaService.deletar(id)
+    async deletar(@Param('id') id: number, @Request() req) {
+        return await this.statusVendaService.deletar(id, req.user)
     }
 }

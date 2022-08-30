@@ -5,46 +5,86 @@ import { StatusRastreamentoVenda } from './entities/status-rastreamento-venda.en
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, EntityNotFoundError } from 'typeorm';
+import { UsuarioService } from 'src/usuarios/usuario.service';
 
 @Injectable()
 export class StatusRastreamentoVendaService {
 
-    constructor(@InjectRepository(StatusRastreamentoVenda) private statusRastreamentoVendaRepository: Repository<StatusRastreamentoVenda>) {
-        
+    constructor(
+        @InjectRepository(StatusRastreamentoVenda)
+        private statusRastreamentoVendaRepository: Repository<StatusRastreamentoVenda>,
+        @Inject(forwardRef(() => UsuarioService))
+        private readonly usuarioService: UsuarioService
+    ) {
+
     }
 
-    buscarStatusRastreamentoVenda(): Promise<StatusRastreamentoVenda[]> {
-        return this.statusRastreamentoVendaRepository.find()
-    }
+    async buscarStatusRastreamentoVenda(user: any): Promise<StatusRastreamentoVenda[]> {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
-    buscarStatusRastreamentoVendaPorId(id: number): Promise<StatusRastreamentoVenda> {
-        return this.statusRastreamentoVendaRepository.findOneBy({id})
-    }
-
-    inserir(inserirStatusVendaDto: InserirStatusRastreamentoVendaDto) {
-        
-        const status_rastreamento_venda = this.statusRastreamentoVendaRepository.create(inserirStatusVendaDto)
-        return this.statusRastreamentoVendaRepository.save(status_rastreamento_venda)
-    }
-
-    async atualizar(id: number, atualizarStatusVendaDto: AtualizarStatusRastreamentovendaDto) {
-        const resultadoAtualizacao = this.statusRastreamentoVendaRepository.update(id, atualizarStatusVendaDto)
-
-        if (!(await resultadoAtualizacao).affected) {
-            throw new EntityNotFoundError(StatusRastreamentoVenda, id)
-        }
-
-        return this.statusRastreamentoVendaRepository.findOneBy({id})
-    }
-
-    async deletar(id: number) {
-        const resultadoDelecao = await this.statusRastreamentoVendaRepository.delete(id)
-
-        if (!(await resultadoDelecao).affected) {
-            throw new EntityNotFoundError(StatusRastreamentoVenda, id)
+        if (usuario) {
+            return await this.statusRastreamentoVendaRepository
+                .createQueryBuilder('status_rastreamento_venda')
+                .where('status_rastreamento_venda.usuario_id = :usuario_id', { usuario_id: usuario.id })
+                .getMany()
+        } else {
+            return null
         }
     }
- }
+
+    async buscarStatusRastreamentoVendaPorId(id: number, user: any): Promise<StatusRastreamentoVenda> {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
+
+        if (usuario) {
+            return await this.statusRastreamentoVendaRepository
+                .createQueryBuilder('status_rastreamento_venda')
+                .where('status_rastreamento_venda.usuario_id = :usuario_id', { usuario_id: usuario.id })
+                .andWhere('status_rastreamento_venda.id = :id', { id })
+                .getOne()
+        } else {
+            return null
+        }
+    }
+
+    async inserir(inserirStatusVendaDto: InserirStatusRastreamentoVendaDto, user: any) {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
+
+        if (usuario) {
+            inserirStatusVendaDto.usuario = usuario.id
+            const statusRastreamentoVenda = await this.statusRastreamentoVendaRepository.create(inserirStatusVendaDto)
+
+            return await this.statusRastreamentoVendaRepository.save(statusRastreamentoVenda)
+        } else {
+            return null
+        }
+    }
+
+    async atualizar(id: number, atualizarStatusVendaDto: AtualizarStatusRastreamentovendaDto, user: any) {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
+
+        if (usuario) {
+            const resultadoAtualizacao = await this.statusRastreamentoVendaRepository.update({ id: id, usuario: usuario.id }, atualizarStatusVendaDto)
+
+            if (!(await resultadoAtualizacao).affected) {
+                throw new EntityNotFoundError(StatusRastreamentoVenda, id)
+            }
+
+            return await this.statusRastreamentoVendaRepository.findOneBy({ id })
+        }
+    }
+
+    async deletar(id: number, user: any) {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
+
+        if (usuario) {
+            const resultadoDelecao = await this.statusRastreamentoVendaRepository.delete({ id: id, usuario: usuario.id })
+
+            if (!(await resultadoDelecao).affected) {
+                throw new EntityNotFoundError(StatusRastreamentoVenda, id)
+            }
+        }
+    }
+}

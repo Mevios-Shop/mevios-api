@@ -2,7 +2,8 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Request, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { VariacaoProduto } from './entities/variacao-produto.entity';
 import { VariacaoProdutoService } from './variacao-produto.service';
 
@@ -14,7 +15,8 @@ export class VariacoesProdutoController {
     }
     
     @Get(':produtoId')
-    buscarVariacoesPorProduto(@Param('produtoId') produtoId: string): Promise<VariacaoProduto[]> {
-        return this.variacaoProdutoService.buscarVariacoesPorIdProduto(Number(produtoId))
+    @UseGuards(JwtAuthGuard)
+    async buscarVariacoesPorProduto(@Param('produtoId') produtoId: string, @Request() req): Promise<VariacaoProduto[]> {
+        return await this.variacaoProdutoService.buscarVariacoesPorIdProduto(Number(produtoId), req.user)
     }
 }

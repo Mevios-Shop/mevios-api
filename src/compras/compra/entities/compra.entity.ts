@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator";
 import { StatusCompra } from "src/compras/status_compra/entities/status-compra.entity";
 import { Plataforma } from "src/plataformas/entities/plataforma.entity";
+import { Usuario } from "src/usuarios/entities/usuario.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
@@ -9,7 +10,7 @@ export class Compra {
     @PrimaryGeneratedColumn()
     id: number
     
-    @Column({ type: "datetime" })
+    @Column({ type: "datetime" , nullable: false})
     data: Date
 
     @Column({ type: "datetime", nullable: true })
@@ -41,14 +42,7 @@ export class Compra {
     @IsNumber()
     status_compra: number
 
-    constructor(data: Date, plataformaId: number, status_compraId: number, data_recebimento?: Date, valor_frete?: number, desconto?: number, codigo_rastreamento?: string, codigo_pedido?: string) {
-        this.data = data
-        this.plataforma = plataformaId
-        this.status_compra = status_compraId
-        this.data_recebimento = data_recebimento
-        this.valor_frete = valor_frete
-        this.desconto = desconto
-        this.codigo_rastreamento = codigo_rastreamento
-        this.codigo_pedido = codigo_pedido
-    }
+    @ManyToOne(type => Usuario, usuario => usuario.id, { nullable: false, eager: false })
+    @IsNumber()
+    usuario: number
 }

@@ -6,7 +6,8 @@ import { SkuProdutoService } from './sku-produto.service';
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Controller, Post, Body, Get, Param, Patch, Delete, HttpCode } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, Delete, HttpCode, Request, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 
 @Controller('sku_produto')
 export class SkuProdutoController {
@@ -14,28 +15,33 @@ export class SkuProdutoController {
     constructor(private skuProdutoService: SkuProdutoService) {}
 
     @Post()
-    inserir(@Body() inserirSkuProdutoDto: InserirSkuProdutoDto) {
-        return this.skuProdutoService.inserir(inserirSkuProdutoDto)
+    @UseGuards(JwtAuthGuard)
+    async inserir(@Body() inserirSkuProdutoDto: InserirSkuProdutoDto, @Request() req) {
+        return await this.skuProdutoService.inserir(inserirSkuProdutoDto, req.user)
     }
 
     @Get()
-    buscar(): Promise<SkuProduto[]> {
-        return this.skuProdutoService.buscarTodos()
+    @UseGuards(JwtAuthGuard)
+    async buscar(@Request() req): Promise<SkuProduto[]> {
+        return await this.skuProdutoService.buscarTodos(req.user)
     }
 
     @Get(':id')
-    buscarPorId(@Param() params): Promise<SkuProduto> {
-        return this.skuProdutoService.buscarPorId(params.id)
+    @UseGuards(JwtAuthGuard)
+    async buscarPorId(@Param() params, @Request() req): Promise<SkuProduto> {
+        return await this.skuProdutoService.buscarPorId(params.id, req.user)
     }
 
     @Patch(':id')
-    atualizar(@Param('id') id: string, @Body() atualizarSkuProdutoDto: AtualizarSkuProdutoDto) {
-        return this.skuProdutoService.atualizar(+id, atualizarSkuProdutoDto)
+    @UseGuards(JwtAuthGuard)
+    async atualizar(@Param('id') id: string, @Body() atualizarSkuProdutoDto: AtualizarSkuProdutoDto, @Request() req) {
+        return await this.skuProdutoService.atualizar(+id, atualizarSkuProdutoDto, req.user)
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard)
     @HttpCode(204)
-    deletar(@Param('id') id: string) {
-        return this.skuProdutoService.deletar(+id)
+    async deletar(@Param('id') id: string, @Request() req) {
+        return await this.skuProdutoService.deletar(+id, req.user)
     }
 }

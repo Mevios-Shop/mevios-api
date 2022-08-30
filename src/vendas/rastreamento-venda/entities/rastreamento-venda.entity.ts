@@ -6,6 +6,7 @@ import { MaxLength } from 'class-validator';
 import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { type } from 'os';
 import { Plataforma } from 'src/plataformas/entities/plataforma.entity';
+import { Usuario } from 'src/usuarios/entities/usuario.entity';
 
 @Entity()
 export class RastreamentoVenda {
@@ -36,12 +37,17 @@ export class RastreamentoVenda {
     @Column({ type: "datetime", nullable: true })
     data_entrega: Date
 
-    constructor(codigo_rastreamento: string, vendaId: number, custo_frete: number, plataformaId: number, data_envio: Date, data_entrega: Date) {
+    @ManyToOne(type => Usuario, usuario => usuario.id, { nullable: false, eager: false })
+    @IsNumber()
+    usuario: number
+
+    constructor(codigo_rastreamento: string, vendaId: number, custo_frete: number, plataformaId: number, data_envio: Date, data_entrega: Date, usuarioId: number) {
         this.codigo_rastreamento = codigo_rastreamento
         this.venda = vendaId
         this.custo_frete = custo_frete
         this.plataforma = plataformaId
         this.data_envio = data_envio
         this.data_entrega = data_entrega
+        this.usuario = usuarioId
     }
 }

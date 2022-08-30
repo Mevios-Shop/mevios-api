@@ -2,7 +2,8 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { AtualizarProdutoDto } from './dto/atualizar-produto.dto';
 import { InserirProdutoDto } from './dto/inserir-produto.dto';
 import { Produto } from './entities/produto.entity';
@@ -16,30 +17,35 @@ export class ProdutosController {
     }
 
     @Post()
-    inserir(@Body() inserirProdutoDto: InserirProdutoDto) {
-        return this.produtosService.inserir(inserirProdutoDto)
+    @UseGuards(JwtAuthGuard)
+    async inserir(@Body() inserirProdutoDto: InserirProdutoDto, @Request() req) {
+        return await this.produtosService.inserir(inserirProdutoDto, req.user)
     }
 
     //@UseGuards(LocalAuthGuard)
     @Get()
-    buscarProdutos(): Promise<Produto[]> {
-        return this.produtosService.buscarTodos()
+    @UseGuards(JwtAuthGuard)
+    async buscarProdutos(@Request() req): Promise<Produto[]> {
+        return await this.produtosService.buscarTodos(req.user)
     }
 
     @Get(':id')
-    buscarProduto(@Param() params): Promise<Produto> {
-        return this.produtosService.buscarPorId(params.id)
+    @UseGuards(JwtAuthGuard)
+    async buscarProduto(@Param() params, @Request() req): Promise<Produto> {
+        return await this.produtosService.buscarPorId(params.id, req.user)
     }
 
     @Patch(':id')
-    atualizar(@Param('id') id: string, @Body() atualizarProdutoDto: AtualizarProdutoDto) {
-        return this.produtosService.atualizar(+id, atualizarProdutoDto)
+    @UseGuards(JwtAuthGuard)
+    async atualizar(@Param('id') id: string, @Body() atualizarProdutoDto: AtualizarProdutoDto, @Request() req) {
+        return await this.produtosService.atualizar(+id, atualizarProdutoDto, req.user)
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard)
     @HttpCode(204)
-    deletar(@Param('id') id: string) {
-        return this.produtosService.deletar(+id)
+    async deletar(@Param('id') id: string, @Request() req) {
+        return await this.produtosService.deletar(+id, req.user)
     }
 
     

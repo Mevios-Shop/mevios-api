@@ -4,7 +4,8 @@ import { SkuProdutoService } from './sku-produto.service';
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Controller, Param, Get, Body } from '@nestjs/common';
+import { Controller, Param, Get, Body, UseGuards, Request } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 
 @Controller("sku_id_variacao")
 export class SkuId_variacaoController {
@@ -12,9 +13,10 @@ export class SkuId_variacaoController {
     constructor(private skuProdutoService: SkuProdutoService) {}
 
     @Get()
-    buscarPorSku(@Body() body): Promise<SkuProduto> {
+    @UseGuards(JwtAuthGuard)
+    async buscarPorSku(@Body() body, @Request() req): Promise<SkuProduto> {
         
-        return this.skuProdutoService.buscarVariacaoPorSku(body['sku'], body['plataformaId']).then(
+        return await this.skuProdutoService.buscarVariacaoPorSku(body['sku'], body['plataformaId'], req.user).then(
             ((resposta: any) => {
                 if (resposta) {
                     return resposta

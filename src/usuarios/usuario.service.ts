@@ -25,8 +25,10 @@ export class UsuarioService {
         return this.usuarioRepository.findOneBy({id})
     }
 
-    buscarPorEmail(email: string): Promise<Usuario> {
-        return this.usuarioRepository.findOneBy({email})
+    async buscarPorEmail(email: string): Promise<Usuario> {
+        console.log('UsuarioService:buscarPorEmail...')
+        const usuario = await this.usuarioRepository.findOneBy({email})
+        return await this.usuarioRepository.findOneBy({email})
     }
 
     async inserir(inserirUsuarioDto: InserirUsuarioDto) {

@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 import { IsString } from 'class-validator';
 import { Column } from 'typeorm';
 export class InserirStatusRastreamentoVendaDto {
@@ -7,4 +7,7 @@ export class InserirStatusRastreamentoVendaDto {
     @IsNotEmpty()
     @Column()
     descricao: string
+
+    @IsNumber()
+    usuario: number
 }

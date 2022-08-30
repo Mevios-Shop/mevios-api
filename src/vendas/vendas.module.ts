@@ -20,12 +20,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 https://docs.nestjs.com/modules
 */
 
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { StatusVenda } from './status-venda/entities/status-venda.entity';
 import { RastreamentoVendaPorvendaIDController } from './rastreamento-venda/rastreamento-venda-vendaid.controller';
+import { UsuariosModule } from 'src/usuarios/usuarios.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([ StatusVenda, Venda, ItemVenda, RastreamentoVenda, StatusRastreamentoVenda ])],
+    imports: [
+        TypeOrmModule.forFeature([ StatusVenda, Venda, ItemVenda, RastreamentoVenda, StatusRastreamentoVenda ]), 
+        forwardRef(() => UsuariosModule)
+    ],
     controllers: [ 
         StatusVendaController, 
         VendaController, 
@@ -35,7 +39,7 @@ import { RastreamentoVendaPorvendaIDController } from './rastreamento-venda/rast
         ItensVendaController, 
         RastreamentoVendaController, 
         StatusRastreamentoVendaController,
-        RastreamentoVendaPorvendaIDController 
+        RastreamentoVendaPorvendaIDController
     ],
     providers: [ StatusVendaService, VendaService, ItemVendaService, RastreamentoVendaService, StatusRastreamentoVendaService ],
 })

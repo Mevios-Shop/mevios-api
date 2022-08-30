@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator";
 import { Compra } from "src/compras/compra/entities/compra.entity";
 import { VariacaoProduto } from "src/produtos/variacao-produto/entities/variacao-produto.entity";
+import { Usuario } from "src/usuarios/entities/usuario.entity";
 import { Column, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { StatusItemCompra } from "../../status_item_compra/entities/status-item-compra.entity";
 
@@ -20,7 +21,7 @@ export class ItemCompra {
     @IsNumber()
     compra: number
 
-    @ManyToOne(type => StatusItemCompra, status_item_compra => status_item_compra.id, { nullable: false, eager: true})
+    @ManyToOne(type => StatusItemCompra, statusItemCompra => statusItemCompra.id, { nullable: false, eager: true })
     @IsNumber()
     @IsNotEmpty()
     status_item_compra: number
@@ -33,11 +34,7 @@ export class ItemCompra {
     @Column({ type: "text", nullable: true })
     link_anuncio: string
 
-    constructor(variacao_produtoId: number, compraId: number, valor: number, link_anuncio?: string, status_item_compraId?: number) {
-        this.variacao_produto = variacao_produtoId
-        this.compra = compraId
-        this.status_item_compra = status_item_compraId
-        this.valor = valor
-        this.link_anuncio = link_anuncio
-    }
+    @IsNumber()
+    @ManyToOne(type => Usuario, usuario => usuario.id, { nullable: false, eager: false })
+    usuario: number
 }

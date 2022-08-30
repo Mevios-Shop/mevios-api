@@ -19,13 +19,16 @@ export class InserirItemVendaDto {
 
     @IsNotEmpty()
     comissao: number
+    @IsNumber()
+    usuario: number
 
-    constructor(valor: number,variacao_produtoId: number ,comissao?: number, estoqueId?: number, vendaId?: number) {
+    constructor(valor: number,variacao_produtoId: number, usario: number ,comissao?: number, estoqueId?: number, vendaId?: number) {
         this.valor = valor
         this.comissao = comissao
         this._estoque = estoqueId
         this.venda = vendaId
         this._variacao_produto = variacao_produtoId
+        this.usuario = usario
     }
 
     set estoque(estoqueId: number) {

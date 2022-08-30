@@ -13,4 +13,7 @@ export class InserirEstoqueDto {
 
     @Column({ type: "datetime" })
     data: Date
+
+    @IsNumber()
+    usuario: number
 }

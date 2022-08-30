@@ -27,4 +27,7 @@ export class InserirItemCompraDto {
     @IsString()
     @Column({ type: "text", nullable: true })
     link_anuncio: string
+
+    @IsNumber()
+    usuario: number
 }

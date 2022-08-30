@@ -6,7 +6,8 @@ import { StatusRastreamentoVendaService } from './status-rastreamento-venda.serv
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Controller, Post, Body, Get, Param, Patch, Delete, HttpCode } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, Delete, HttpCode, UseGuards, Request } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 
 @Controller('status_rastreamento_venda')
 export class StatusRastreamentoVendaController {
@@ -16,28 +17,33 @@ export class StatusRastreamentoVendaController {
     }
 
     @Post()
-    inserir(@Body() inserirStatusRastreamentoVendaDto: InserirStatusRastreamentoVendaDto) {
-        return this.statusRastreamentoVendaService.inserir(inserirStatusRastreamentoVendaDto)
+    @UseGuards(JwtAuthGuard)
+    async inserir(@Body() inserirStatusRastreamentoVendaDto: InserirStatusRastreamentoVendaDto, @Request() req) {
+        return await this.statusRastreamentoVendaService.inserir(inserirStatusRastreamentoVendaDto, req.user)
     }
 
     @Get()
-    buscarStatusRastreamentoVenda(): Promise<StatusRastreamentoVenda[]> {
-        return this.statusRastreamentoVendaService.buscarStatusRastreamentoVenda()
+    @UseGuards(JwtAuthGuard)
+    async buscarStatusRastreamentoVenda(@Request() req): Promise<StatusRastreamentoVenda[]> {
+        return await this.statusRastreamentoVendaService.buscarStatusRastreamentoVenda(req.user)
     }
 
     @Get(':id')
-    buscarStatusVendaPorId(@Param() params) {
-        return this.statusRastreamentoVendaService.buscarStatusRastreamentoVendaPorId(params.id)
+    @UseGuards(JwtAuthGuard)
+    async buscarStatusVendaPorId(@Param() params, @Request() req) {
+        return await this.statusRastreamentoVendaService.buscarStatusRastreamentoVendaPorId(params.id, req.user)
     }
 
     @Patch(':id')
-    atualizar(@Param('id') id: number, @Body() atualizarStatusRastreamentoVendaDto: AtualizarStatusRastreamentovendaDto) {
-        return this.statusRastreamentoVendaService.atualizar(id, atualizarStatusRastreamentoVendaDto)
+    @UseGuards(JwtAuthGuard)
+    async atualizar(@Param('id') id: number, @Body() atualizarStatusRastreamentoVendaDto: AtualizarStatusRastreamentovendaDto, @Request() req) {
+        return await this.statusRastreamentoVendaService.atualizar(id, atualizarStatusRastreamentoVendaDto, req.user)
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard)
     @HttpCode(204)
-    deletar(@Param('id') id: number) {
-        return this.statusRastreamentoVendaService.deletar(id)
+    async deletar(@Param('id') id: number, @Request() req) {
+        return await this.statusRastreamentoVendaService.deletar(id, req.user)
     }
 }

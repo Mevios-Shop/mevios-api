@@ -2,7 +2,8 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Request, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { Plataforma } from './entities/plataforma.entity';
 import { PlataformasService } from './plataformas.service';
 
@@ -11,7 +12,8 @@ export class PlataformaDescricaoController {
     constructor(private plataformasService: PlataformasService) { }
 
     @Get(':descricao')
-    buscarPlataforma(@Param() params): Promise<Plataforma> {
-        return this.plataformasService.buscarPorDescricao(params.descricao)
+    @UseGuards(JwtAuthGuard)
+    async buscarPlataforma(@Param() params, @Request() req): Promise<Plataforma> {
+        return await this.plataformasService.buscarPorDescricao(params.descricao, req.user)
     }
 }

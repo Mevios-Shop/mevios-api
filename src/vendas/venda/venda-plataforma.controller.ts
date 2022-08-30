@@ -1,10 +1,11 @@
 import { VendaService } from './venda.service';
-import { Get, Param } from '@nestjs/common';
+import { Get, Param, Request, UseGuards } from '@nestjs/common';
 /*
 https://docs.nestjs.com/controllers#controllers
 */
 
 import { Controller } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 
 @Controller('vendas_plataforma')
 export class VendaPlataformaController {
@@ -14,7 +15,8 @@ export class VendaPlataformaController {
     }
 
     @Get(':id_plataforma')
-    buscarVendaPorId(@Param() params) {
-        return this.VendasService.buscarVendasPorIdPlataforma(params.id_plataforma)
+    @UseGuards(JwtAuthGuard)
+    async buscarVendaPorId(@Param() params, @Request() req) {
+        return await this.VendasService.buscarVendasPorIdPlataforma(params.id_plataforma, req.user)
     }
 }

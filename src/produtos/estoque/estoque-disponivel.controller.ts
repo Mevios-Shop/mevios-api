@@ -2,7 +2,8 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Request, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { Estoque } from './entities/estoque.entity';
 import { EstoqueService } from './estoque.service';
 
@@ -14,8 +15,9 @@ export class EstoqueDisponivelController {
     }
 
     @Get(':id/:quantidade')
-    buscarProdutosDisponiveisPorVariacaoId(@Param() params): Promise<Estoque[]> {
-        return this.estoqueService.buscarProdutosDisponiveisPorVariacaoId(params.id, params.quantidade).then(
+    @UseGuards(JwtAuthGuard)
+    buscarProdutosDisponiveisPorVariacaoId(@Param() params, @Request() req): Promise<Estoque[]> {
+        return this.estoqueService.buscarProdutosDisponiveisPorVariacaoId(params.id, params.quantidade, req.user).then(
             ((resposta: any) => {
                 let contador: any = 0
                 for (let i = 0; i < resposta.length; i++) {
@@ -34,7 +36,8 @@ export class EstoqueDisponivelController {
     }
 
     @Get()
-    buscar_produtos_disponiveis_agrupados(): Promise<any[]> {
-        return this.estoqueService.buscar_produtos_disponiveis_agrupados()
+    @UseGuards(JwtAuthGuard)
+    async buscar_produtos_disponiveis_agrupados(@Request() req): Promise<any[]> {
+        return await this.estoqueService.buscar_produtos_disponiveis_agrupados(req.user)
     }
 }

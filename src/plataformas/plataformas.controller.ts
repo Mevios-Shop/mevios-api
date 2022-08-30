@@ -2,7 +2,8 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { AtualizarPlataformaDto } from './dto/atualizar-plataforma.dto';
 import { InserirPlataformaDto } from './dto/inserir-plataforma.dto';
 import { Plataforma } from './entities/plataforma.entity';
@@ -14,28 +15,33 @@ export class PlataformasController {
     constructor(private plataformasService: PlataformasService) { }
 
     @Post()
-    inserir(@Body() inserirPlataformaDto: InserirPlataformaDto) {
-        return this.plataformasService.inserir(inserirPlataformaDto)
+    @UseGuards(JwtAuthGuard)
+    async inserir(@Body() inserirPlataformaDto: InserirPlataformaDto, @Request() req) {
+        return await this.plataformasService.inserir(inserirPlataformaDto, req.user)
     }
 
     @Get()
-    buscarPlataformas(): Promise<Plataforma[]> {
-        return this.plataformasService.buscarTodos()
+    @UseGuards(JwtAuthGuard)
+    async buscarPlataformas(@Request() req): Promise<Plataforma[]> {
+        return await this.plataformasService.buscarTodos(req.user)
     }
 
     @Get(':id')
-    buscarPlataforma(@Param() params): Promise<Plataforma> {
-        return this.plataformasService.buscarPorId(params.id)
+    @UseGuards(JwtAuthGuard)
+    async buscarPlataforma(@Param() params, @Request() req): Promise<Plataforma> {
+        return await this.plataformasService.buscarPorId(params.id, req.user)
     }
 
     @Patch(':id')
-    atualizar(@Param('id') id: string, @Body() atualizarPlataformaDto: AtualizarPlataformaDto) {
-        return this.plataformasService.atualizar(+id, atualizarPlataformaDto)
+    @UseGuards(JwtAuthGuard)
+    async atualizar(@Param('id') id: string, @Body() atualizarPlataformaDto: AtualizarPlataformaDto, @Request() req) {
+        return await this.plataformasService.atualizar(+id, atualizarPlataformaDto, req.user)
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard)
     @HttpCode(204)
-    deletar(@Param('id') id: string) {
-        return this.plataformasService.deletar(+id)
+    async deletar(@Param('id') id: string, @Request() req) {
+        return await this.plataformasService.deletar(+id, req.user)
     }
 }

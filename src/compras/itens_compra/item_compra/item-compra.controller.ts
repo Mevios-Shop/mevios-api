@@ -2,7 +2,8 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AtualizarItemCompraDto } from './dto/atualizar-item-compra.dto';
 import { InserirItemCompraDto } from './dto/inserir-item-compra.dto';
 import { ItemCompra } from './entities/item-compra.entity';
@@ -16,24 +17,28 @@ export class ItemCompraController {
     }
 
     @Post()   
-    inserir(@Body() inserirItemCompraDto: InserirItemCompraDto) {
-        return this.itemCompraService.inserir(inserirItemCompraDto)
+    @UseGuards(AuthGuard('jwt'))
+    inserir(@Body() inserirItemCompraDto: InserirItemCompraDto, @Request() req) {
+        return this.itemCompraService.inserir(inserirItemCompraDto, req.user)
     }
 
     @Get(':id')
-    buscarPorId(@Param() params) {
-        return this.itemCompraService.buscarPorId(params.id)
+    @UseGuards(AuthGuard('jwt'))
+    buscarPorId(@Param() params, @Request() req) {
+        return this.itemCompraService.buscarPorId(params.id, req.user)
     }
 
     @Patch(':id')
-    atualizar(@Param('id') id: number, @Body() atualizarItemCompraDto: AtualizarItemCompraDto) {
-        return this.itemCompraService.atualizar(id, atualizarItemCompraDto)
+    @UseGuards(AuthGuard('jwt'))
+    atualizar(@Param('id') id: number, @Body() atualizarItemCompraDto: AtualizarItemCompraDto, @Request() req) {
+        return this.itemCompraService.atualizar(id, atualizarItemCompraDto, req.user)
     }
 
     @Delete(':id')
+    @UseGuards(AuthGuard('jwt'))
     @HttpCode(204)
-    deletar(@Param('id') id: number) {
-        return this.itemCompraService.deletar(id)
+    deletar(@Param('id') id: number, @Request() req) {
+        return this.itemCompraService.deletar(id, req.user)
     }
 
 }

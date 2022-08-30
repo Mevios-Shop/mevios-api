@@ -2,6 +2,7 @@ import { StatusVenda } from './../../status-venda/entities/status-venda.entity';
 import { Plataforma } from './../../../plataformas/entities/plataforma.entity';
 import { IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Usuario } from 'src/usuarios/entities/usuario.entity';
 
 @Entity()
 export class Venda {
@@ -34,12 +35,17 @@ export class Venda {
     @IsNumber()
     status_venda: number
 
-    constructor(data: Date, codigo_pedido: string, plataformaId: number, status_vendaId: number, valor_frete?: number, valor_reembolso?: number) {
+    @ManyToOne(type => Usuario, usuario => usuario.id, { nullable: false, eager: false })
+    @IsNumber()
+    usuario: number
+
+    constructor(data: Date, codigo_pedido: string, plataformaId: number, status_vendaId: number, usuario: number, valor_frete?: number, valor_reembolso?: number) {
         this.data = data
         this.valor_frete = valor_frete
         this.valor_reembolso = valor_reembolso
         this.codigo_pedido = codigo_pedido
         this.plataforma = plataformaId
         this.status_venda = status_vendaId
+        this.usuario = usuario
     }
 }

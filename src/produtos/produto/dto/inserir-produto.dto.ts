@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsString, MaxLength } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator";
 
 export class InserirProdutoDto {
 
@@ -11,4 +11,6 @@ export class InserirProdutoDto {
     @IsNotEmpty()
     habilitado: boolean
 
+    @IsNumber()
+    usuario: number
 }

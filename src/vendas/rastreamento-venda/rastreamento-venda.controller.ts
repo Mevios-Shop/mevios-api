@@ -5,7 +5,8 @@ import { RastreamentoVendaService } from './rastreamento-venda.service';
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 
 @Controller('rastreamento_venda')
 export class RastreamentoVendaController {
@@ -15,23 +16,27 @@ export class RastreamentoVendaController {
     }
 
     @Post()
-    inserir(@Body() inserirRastreamentoVendaDto: InserirRastreamentoVendaDto) {
-        return this.rastreamentoVendaService.inserir(inserirRastreamentoVendaDto)
+    @UseGuards(JwtAuthGuard)
+    async inserir(@Body() inserirRastreamentoVendaDto: InserirRastreamentoVendaDto, @Request() req) {
+        return await this.rastreamentoVendaService.inserir(inserirRastreamentoVendaDto, req.user)
     }
 
     @Get(':id')
-    buscarPorId(@Param() params) {
-        return this.rastreamentoVendaService.buscarPorId(params.id)
+    @UseGuards(JwtAuthGuard)
+    async buscarPorId(@Param() params, @Request() req) {
+        return await this.rastreamentoVendaService.buscarPorId(params.id, req.user)
     }
 
     @Patch(':id')
-    atualizar(@Param('id') id: number, @Body() atualizarRastreamentoVendaDto: AtualizarRastreamentoVendaDto) {
-        return this.rastreamentoVendaService.atualizar( id, atualizarRastreamentoVendaDto)
+    @UseGuards(JwtAuthGuard)
+    async atualizar(@Param('id') id: number, @Body() atualizarRastreamentoVendaDto: AtualizarRastreamentoVendaDto, @Request() req) {
+        return await this.rastreamentoVendaService.atualizar( id, atualizarRastreamentoVendaDto, req.user)
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard)
     @HttpCode(204)
-    deletar(@Param('id') id: number) {
-        return this.rastreamentoVendaService.deletar(id)
+    async deletar(@Param('id') id: number, @Request() req) {
+        return await this.rastreamentoVendaService.deletar(id, req.user)
     }
 }

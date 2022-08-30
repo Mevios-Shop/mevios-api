@@ -4,8 +4,8 @@ import { Column, ManyToOne } from "typeorm"
 
 export class InserirCompraDto {
 
-    @Column({ type: "datetime" })
-    data: Date
+    @IsNotEmpty({message: "O campo data não pode ser vazio"})
+    data: string
 
     @Column({ type: "datetime" })
     data_recebimento: Date
@@ -35,4 +35,7 @@ export class InserirCompraDto {
     @IsNotEmpty()
     @IsNumber()
     status_compraId: number
+
+    @IsNumber()
+    usuario: number
 }

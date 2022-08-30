@@ -2,7 +2,8 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { AtualizarVariacaoProdutoDto } from './dto/atualizar-variacao-produto.dto';
 import { InserirVariacaoProdutoDto } from './dto/inserir-variacao-produto.dto';
 import { VariacaoProduto } from './entities/variacao-produto.entity';
@@ -16,28 +17,33 @@ export class VariacaoProdutoController {
     }
 
     @Post()
-    inserir(@Body() inserirVaridacaoProdutoDto: InserirVariacaoProdutoDto) {
-        return this.variacaoProdutoService.inserir(inserirVaridacaoProdutoDto)
+    @UseGuards(JwtAuthGuard)
+    async inserir(@Body() inserirVaridacaoProdutoDto: InserirVariacaoProdutoDto, @Request() req) {
+        return await this.variacaoProdutoService.inserir(inserirVaridacaoProdutoDto, req.user)
     }
 
     @Get()
-    buscarVariacoes(): Promise<VariacaoProduto[]> {
-        return this.variacaoProdutoService.buscarVariacoes()
+    @UseGuards(JwtAuthGuard)
+    async buscarVariacoes(@Request() req): Promise<VariacaoProduto[]> {
+        return await this.variacaoProdutoService.buscarVariacoes(req.user)
     }
  
     @Get(':id')
-    buscarVariacaoPorId(@Param() params) {
-        return this.variacaoProdutoService.buscarVariacaoPorId(params.id)
+    @UseGuards(JwtAuthGuard)
+    async buscarVariacaoPorId(@Param() params, @Request() req) {
+        return await this.variacaoProdutoService.buscarVariacaoPorId(params.id, req.user)
     }
     
     @Patch(':id')
-    atualizar(@Param('id') id: string, @Body() atualizarVariacaoProdutoDto: AtualizarVariacaoProdutoDto) {
-        return this.variacaoProdutoService.atualizar(+id, atualizarVariacaoProdutoDto)
+    @UseGuards(JwtAuthGuard)
+    async atualizar(@Param('id') id: string, @Body() atualizarVariacaoProdutoDto: AtualizarVariacaoProdutoDto, @Request() req) {
+        return await this.variacaoProdutoService.atualizar(+id, atualizarVariacaoProdutoDto, req.user)
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard)
     @HttpCode(204)
-    deletar(@Param('id') id: string) {
-        return this.variacaoProdutoService.deletar(id)
+    async deletar(@Param('id') id: string, @Request() req) {
+        return await this.variacaoProdutoService.deletar(+id, req.user)
     }
 }

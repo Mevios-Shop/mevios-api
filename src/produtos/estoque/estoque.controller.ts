@@ -6,7 +6,8 @@ import { EstoqueService } from './estoque.service';
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 
 @Controller('estoque')
 export class EstoqueController {
@@ -16,7 +17,8 @@ export class EstoqueController {
     }
 
     @Post()
-    inserir(@Body() inserirEstoqueDto: InserirEstoqueDto[]) {
+    @UseGuards(JwtAuthGuard)
+    inserir(@Body() inserirEstoqueDto: InserirEstoqueDto[], @Request() req) {
 
         /*
         inserirEstoqueDto.forEach(element => {
@@ -27,27 +29,31 @@ export class EstoqueController {
             }
         });*/
 
-        return this.estoqueService.inserir(inserirEstoqueDto)
+        return this.estoqueService.inserir(inserirEstoqueDto, req.user)
     }
 
     @Get()
-    buscar(): Promise<Estoque[]> {
-        return this.estoqueService.buscarTodos()
+    @UseGuards(JwtAuthGuard)
+    async buscar(@Request() req): Promise<Estoque[]> {
+        return await this.estoqueService.buscarTodos(req.user)
     }
 
     @Get(':id')
-    buscarPorId(@Param() params): Promise<Estoque> {
-        return this.estoqueService.buscarPorId(params.id)
+    @UseGuards(JwtAuthGuard)
+    async buscarPorId(@Param() params, @Request() req): Promise<Estoque> {
+        return await  this.estoqueService.buscarPorId(params.id, req.user)
     }
 
     @Patch(':id')
-    atualizar(@Param('id') id: string, @Body() atualizarEstoqueDto: AtualizarEstoqueDto) {
-        return this.estoqueService.atualizar(+id, atualizarEstoqueDto)
+    @UseGuards(JwtAuthGuard)
+    async atualizar(@Param('id') id: string, @Body() atualizarEstoqueDto: AtualizarEstoqueDto, @Request() req) {
+        return this.estoqueService.atualizar(+id, atualizarEstoqueDto, req.user)
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard)
     @HttpCode(204)
-    deletar(@Param('id') id: string) {
-        return this.estoqueService.deletar(+id)
+    deletar(@Param('id') id: string, @Request() req) {
+        return this.estoqueService.deletar(+id, req.user)
     }
 }

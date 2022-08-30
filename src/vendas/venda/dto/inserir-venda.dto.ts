@@ -26,13 +26,17 @@ export class InserirVendaDto {
     @IsNumber()
     status_venda: number
 
-    constructor(data: Date, plataformaId: number, status_venda: number, valor_frete?: number, valor_reembolso?: number, codigo_pedido?: string) {
+    @IsNumber()
+    usuario: number
+
+    constructor(data: Date, plataformaId: number, status_venda: number, usuario: number, valor_frete?: number, valor_reembolso?: number, codigo_pedido?: string) {
         this.data = data
         this.plataforma = plataformaId
         this.status_venda = status_venda
         this.valor_frete = valor_frete
         this.valor_reembolso = valor_reembolso
         this._codigo_pedido = codigo_pedido
+        this.usuario = usuario
     }
 
     get codigo_pedido(): string {

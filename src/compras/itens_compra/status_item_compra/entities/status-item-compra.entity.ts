@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsString } from "class-validator"
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { IsNotEmpty, IsNumber, IsString } from "class-validator"
+import { Usuario } from "src/usuarios/entities/usuario.entity"
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity()
 export class StatusItemCompra {
