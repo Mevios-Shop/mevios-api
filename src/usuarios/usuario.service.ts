@@ -26,7 +26,7 @@ export class UsuarioService {
     }
 
     async buscarPorEmail(email: string): Promise<Usuario> {
-        console.log('UsuarioService:buscarPorEmail....')
+        console.log('UsuarioService:buscarPorEmail...')
         const usuario = await this.usuarioRepository.findOneBy({email})
         return await this.usuarioRepository.findOneBy({email})
     }
