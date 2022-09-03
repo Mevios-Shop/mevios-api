@@ -13,7 +13,7 @@ async function bootstrap() {
       'https://mevios-erp.web.app',
       'https://mevios-erp.firebaseapp.com',
       'https://erp.meviosshop.com.br',
-      'https://www.erp.meviosshop.com.br/',
+      'https://www.erp.meviosshop.com.br',
     ],
     methods: 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS',
     preflightContinue: false,
