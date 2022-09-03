@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import * as compression from 'compression';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
@@ -11,7 +12,8 @@ async function bootstrap() {
       'http://localhost',
       'https://mevios-erp.web.app',
       'https://mevios-erp.firebaseapp.com',
-      'https://er.erp.mevios.com.br',
+      'https://erp.mevios.com.br',
+      'https://www.erp.mevios.com.br',
     ],
     methods: 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS',
     preflightContinue: false,
@@ -24,6 +26,7 @@ async function bootstrap() {
     ]
   };
   app.enableCors(cors);
+  app.use(compression());
 
   const config = new DocumentBuilder()
     .setTitle('Cats example')
