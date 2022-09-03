@@ -12,7 +12,7 @@ async function bootstrap() {
       'http://localhost',
       'https://mevios-erp.web.app',
       'https://mevios-erp.firebaseapp.com',
-      'https://erp.mevios.com.br',
+      'https://erp.meviosshop.com.br',
       'https://www.erp.meviosshop.com.br/',
     ],
     methods: 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS',
