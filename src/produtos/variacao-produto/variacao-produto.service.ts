@@ -58,6 +58,7 @@ export class VariacaoProdutoService {
                 .leftJoinAndSelect("variacao_produto.produto", "produto")
                 .where("variacao_produto.produtoId = :produtoId", { produtoId: produtoId })
                 .andWhere("variacao_produto.usuarioId = :usuarioId", { usuarioId: usuario.id })
+                .orderBy('variacao_produto.descricao', 'ASC')
                 .getMany()
         }
         return null
