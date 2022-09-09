@@ -10,7 +10,4 @@ export class InserirProdutoDto {
     @IsBoolean()
     @IsNotEmpty()
     habilitado: boolean
-
-    @IsNumber()
-    usuario: number
 }

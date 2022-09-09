@@ -14,13 +14,8 @@ export class Produto {
     @Column('boolean', {default: true})
     habilitado: boolean
 
-    @ManyToOne(type => Usuario, usuario => usuario.id, { nullable: false, eager: false })
-    @IsNumber()
-    usuario: number
-
-    constructor(nome: string, habilitado: boolean, usuario: number) {
+    constructor(nome: string, habilitado: boolean) {
         this.nome = nome
         this.habilitado = habilitado
-        this.usuario = usuario
     }
 }

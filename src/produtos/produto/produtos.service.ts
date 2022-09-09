@@ -25,8 +25,7 @@ export class ProdutosService {
         if (usuario) {
             return await this.produtoRepository
                 .createQueryBuilder("produto")
-                .where("produto.usuarioId = :usuarioId", { usuarioId: usuario.id })
-                .andWhere("produto.habilitado = :habilitado", { habilitado: true })
+                .where("produto.habilitado = :habilitado", { habilitado: true })
                 .orderBy('produto.nome', 'ASC')
                 .getMany()
         }
@@ -39,8 +38,7 @@ export class ProdutosService {
         if (usuario) {
             return await this.produtoRepository
                 .createQueryBuilder("produto")
-                .where("produto.usuarioId = :usuarioId", { usuarioId: usuario.id })
-                .andWhere("produto.habilitado = :habilitado", { habilitado: true })
+                .where("produto.habilitado = :habilitado", { habilitado: true })
                 .andWhere("produto.id = :id", { id: id })
                 .getOne()
         }
@@ -51,7 +49,6 @@ export class ProdutosService {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-            inserirProdutoDto.usuario = usuario.id
             const produto = await this.produtoRepository.create(inserirProdutoDto)
             return await this.produtoRepository.save(produto)
         }
@@ -62,7 +59,7 @@ export class ProdutosService {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-            const resultadoAtualizacao = await this.produtoRepository.update({ id: id, usuario: usuario.id }, atualizarProdutoDto)
+            const resultadoAtualizacao = await this.produtoRepository.update({ id: id }, atualizarProdutoDto)
             if (!(await resultadoAtualizacao).affected) {
                 throw new EntityNotFoundError(Produto, id)
             }
@@ -76,8 +73,7 @@ export class ProdutosService {
         if (usuario) {
             let atualizarProdutoDto: AtualizarProdutoDto = await this.produtoRepository
                 .createQueryBuilder("produto")
-                .where("compra.usuarioId = :usuarioId", { usuario: usuario.id })
-                .andWhere("produto.habilitado = :habilitado", { habilitado: true })
+                .where("produto.habilitado = :habilitado", { habilitado: true })
                 .andWhere("produto.id = :id", { id: id })
                 .getOne()
 
