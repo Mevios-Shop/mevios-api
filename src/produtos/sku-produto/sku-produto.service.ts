@@ -49,12 +49,14 @@ export class SkuProdutoService {
     async buscarVariacaoPorSku(sku: string, plataformaId: number, user: any): Promise<SkuProduto> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
+        console.log("sku: " + sku, "plataformaId: " + plataformaId)
+
         if (usuario) {
             return await this.skuProdutoRepository
                 .createQueryBuilder("sku_produto")
                 .leftJoinAndSelect("sku_produto.plataforma", "plataforma")
                 .leftJoinAndSelect("sku_produto.variacao_produto", "variacao_produto")
-                .andWhere("sku_produto.sku = :sku", { sku: sku })
+                .where("sku_produto.sku = :sku", { sku: sku, plataformaId: plataformaId })
                 .getOne()
         }
         return null
