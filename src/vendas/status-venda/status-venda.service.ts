@@ -27,7 +27,6 @@ export class StatusVendaService {
         if (usuario) {
             return await this.statusVendaRepository
                 .createQueryBuilder("status_venda")
-                .where("status_venda.usuarioId = :usuarioId", { usuarioId: usuario.id })
                 .orderBy('status_venda.data', 'DESC')
                 .getMany()
         } else {
@@ -41,8 +40,7 @@ export class StatusVendaService {
         if (usuario) {
             return await this.statusVendaRepository
                 .createQueryBuilder("status_venda")
-                .where("status_venda.usuarioId = :usuarioId", { usuarioId: usuario.id })
-                .andWhere("status_venda.id = :id", { id: id })
+                .where("status_venda.id = :id", { id: id })
                 .getOne()
         } else {
             return null
@@ -53,7 +51,6 @@ export class StatusVendaService {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-            inserirStatusVendaDto.usuario = usuario.id
             const statusVenda = this.statusVendaRepository.create(inserirStatusVendaDto)
             return this.statusVendaRepository.save(statusVenda)
         } else {
@@ -65,7 +62,7 @@ export class StatusVendaService {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-            const resultadoAtualizacao = this.statusVendaRepository.update({ id: id, usuario: usuario.id }, atualizarStatusVendaDto)
+            const resultadoAtualizacao = this.statusVendaRepository.update({ id: id }, atualizarStatusVendaDto)
 
             if (!(await resultadoAtualizacao).affected) {
                 throw new EntityNotFoundError(StatusVenda, id)
@@ -79,7 +76,7 @@ export class StatusVendaService {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-            const resultadoDelecao = await this.statusVendaRepository.delete({ id: id, usuario: usuario.id })
+            const resultadoDelecao = await this.statusVendaRepository.delete({ id: id })
 
             if (!(await resultadoDelecao).affected) {
                 throw new EntityNotFoundError(StatusVenda, id)

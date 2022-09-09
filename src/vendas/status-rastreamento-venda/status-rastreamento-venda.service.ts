@@ -28,7 +28,6 @@ export class StatusRastreamentoVendaService {
         if (usuario) {
             return await this.statusRastreamentoVendaRepository
                 .createQueryBuilder('status_rastreamento_venda')
-                .where('status_rastreamento_venda.usuario_id = :usuario_id', { usuario_id: usuario.id })
                 .getMany()
         } else {
             return null
@@ -41,8 +40,7 @@ export class StatusRastreamentoVendaService {
         if (usuario) {
             return await this.statusRastreamentoVendaRepository
                 .createQueryBuilder('status_rastreamento_venda')
-                .where('status_rastreamento_venda.usuario_id = :usuario_id', { usuario_id: usuario.id })
-                .andWhere('status_rastreamento_venda.id = :id', { id })
+                .where('status_rastreamento_venda.id = :id', { id })
                 .getOne()
         } else {
             return null
@@ -53,7 +51,6 @@ export class StatusRastreamentoVendaService {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-            inserirStatusVendaDto.usuario = usuario.id
             const statusRastreamentoVenda = await this.statusRastreamentoVendaRepository.create(inserirStatusVendaDto)
 
             return await this.statusRastreamentoVendaRepository.save(statusRastreamentoVenda)
@@ -66,7 +63,7 @@ export class StatusRastreamentoVendaService {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-            const resultadoAtualizacao = await this.statusRastreamentoVendaRepository.update({ id: id, usuario: usuario.id }, atualizarStatusVendaDto)
+            const resultadoAtualizacao = await this.statusRastreamentoVendaRepository.update({ id: id }, atualizarStatusVendaDto)
 
             if (!(await resultadoAtualizacao).affected) {
                 throw new EntityNotFoundError(StatusRastreamentoVenda, id)
@@ -80,7 +77,7 @@ export class StatusRastreamentoVendaService {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-            const resultadoDelecao = await this.statusRastreamentoVendaRepository.delete({ id: id, usuario: usuario.id })
+            const resultadoDelecao = await this.statusRastreamentoVendaRepository.delete({ id: id })
 
             if (!(await resultadoDelecao).affected) {
                 throw new EntityNotFoundError(StatusRastreamentoVenda, id)

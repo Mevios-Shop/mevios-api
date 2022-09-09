@@ -7,7 +7,4 @@ export class InserirStatusVendaDto {
     @IsNotEmpty()
     @Column()
     descricao: string
-
-    @IsNumber()
-    usuario: number
 }
