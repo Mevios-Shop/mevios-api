@@ -14,7 +14,4 @@ export class InserirSkuProdutoDto {
     @IsNotEmpty()
     @IsNumber()
     plataforma: number
-
-    @IsNumber()
-    usuario: number
 }

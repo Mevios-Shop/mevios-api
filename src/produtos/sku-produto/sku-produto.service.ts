@@ -27,7 +27,6 @@ export class SkuProdutoService {
                 .createQueryBuilder("sku_produto")
                 .leftJoinAndSelect("sku_produto.plataforma", "plataforma")
                 .leftJoinAndSelect("sku_produto.variacao_produto", "variacao_produto")
-                .where("sku_produto.usuarioId = :usuarioId", { usuarioId: usuario.id })
                 .getMany()
         }
         return null
@@ -41,8 +40,7 @@ export class SkuProdutoService {
                 .createQueryBuilder("sku_produto")
                 .leftJoinAndSelect("sku_produto.plataforma", "plataforma")
                 .leftJoinAndSelect("sku_produto.variacao_produto", "variacao_produto")
-                .where("sku_produto.usuarioId = :usuarioId", { usuarioId: usuario.id })
-                .andWhere("sku_produto.id = :id", { id: id })
+                .where("sku_produto.id = :id", { id: id })
                 .getOne()
         }
         return null
@@ -56,7 +54,6 @@ export class SkuProdutoService {
                 .createQueryBuilder("sku_produto")
                 .leftJoinAndSelect("sku_produto.plataforma", "plataforma")
                 .leftJoinAndSelect("sku_produto.variacao_produto", "variacao_produto")
-                .where("sku_produto.usuarioId = :usuarioId", { usuarioId: usuario.id })
                 .andWhere("sku_produto.sku = :sku", { sku: sku })
                 .getOne()
         }
@@ -67,7 +64,6 @@ export class SkuProdutoService {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-            inserirSkuProdutoDto.usuario = usuario.id
             const sku_produto = this.skuProdutoRepository.create(inserirSkuProdutoDto)
             return await this.skuProdutoRepository.save(sku_produto)
         }
@@ -92,7 +88,7 @@ export class SkuProdutoService {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-            const resultado = await this.skuProdutoRepository.delete({ id: id, usuario: usuario.id })
+            const resultado = await this.skuProdutoRepository.delete({ id: id })
             if (resultado.affected === 0) {
                 throw new EntityNotFoundError(SkuProduto, id)
             }

@@ -25,14 +25,9 @@ export class SkuProduto {
     @IsNumber()
     plataforma: number
 
-    @ManyToOne(type => Usuario, usuario => usuario.id, { nullable: false, eager: false })
-    @IsNumber()
-    usuario: number
-
-    constructor(variacao_produtoId: number, sku: string, plataformaId: number, usuarioId: number) {
+    constructor(variacao_produtoId: number, sku: string, plataformaId: number) {
         this.variacao_produto = variacao_produtoId
         this.sku = sku
         this.plataforma = plataformaId
-        this.usuario = usuarioId
     }
 }
