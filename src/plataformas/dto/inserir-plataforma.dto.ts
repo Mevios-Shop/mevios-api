@@ -5,7 +5,4 @@ export class InserirPlataformaDto {
     @IsString()
     @IsNotEmpty()
     descricao: string
-
-    @IsNumber()
-    usuario: number
 }

@@ -14,12 +14,7 @@ export class Plataforma {
     @Column()
     descricao: string
 
-    @ManyToOne(type => Usuario, usuario => usuario.id, { nullable: false, eager: false })
-    @IsNumber()
-    usuario: number
-
-    constructor(descricao: string, usuario: number) {
+    constructor(descricao: string) {
         this.descricao = descricao
-        this.usuario = usuario
     }
 }

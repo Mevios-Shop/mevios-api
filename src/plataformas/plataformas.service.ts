@@ -25,7 +25,6 @@ export class PlataformasService {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-            inserirPlataformaDto.usuario = usuario.id
             const plataforma = this.plataformaRepository.create(inserirPlataformaDto)
             return await this.plataformaRepository.save(plataforma)
         }
@@ -37,7 +36,6 @@ export class PlataformasService {
         if (usuario) {
             return await this.plataformaRepository
                 .createQueryBuilder("plataforma")
-                .where("plataforma.usuarioId = :usuarioId", { usuarioId: usuario.id })
                 .orderBy('plataforma.descricao', 'ASC')
                 .getMany()
         }
@@ -50,8 +48,7 @@ export class PlataformasService {
         if (usuario) {
             return await this.plataformaRepository
                 .createQueryBuilder("plataforma")
-                .where("compra.id = :id", { id: id })
-                .andWhere("compra.usuarioId = :usuarioId", { usuarioId: usuario.id })
+                .where("plataforma.id = :id", { id: id })
                 .getOne()
         }
         return null
@@ -64,7 +61,6 @@ export class PlataformasService {
             return await this.plataformaRepository
                 .createQueryBuilder("plataforma")
                 .where("plataforma.descricao = :descricao", { descricao: descricao })
-                .andWhere("plataforma.usuarioId = :usuarioId", { usuarioId: usuario.id })
                 .orderBy('plataforma.descricao', 'ASC')
                 .getOne()
         }
@@ -75,7 +71,7 @@ export class PlataformasService {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-            const resultadoAtualizacao = await this.plataformaRepository.update({ id: id, usuario: usuario.id }, atualizarPlataformaDto)
+            const resultadoAtualizacao = await this.plataformaRepository.update({ id: id }, atualizarPlataformaDto)
             if (!(await resultadoAtualizacao).affected) {
                 throw new EntityNotFoundError(Plataforma, id)
             }
@@ -88,7 +84,7 @@ export class PlataformasService {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-            const resultadoDelecao = await this.plataformaRepository.delete({ id: id, usuario: usuario.id })
+            const resultadoDelecao = await this.plataformaRepository.delete({ id: id })
             if (!(await resultadoDelecao).affected) {
                 throw new EntityNotFoundError(Plataforma, id)
             }
