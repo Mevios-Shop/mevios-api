@@ -28,7 +28,6 @@ export class VariacaoProdutoService {
             return await this.variacaoProdutoRepository
                 .createQueryBuilder("variacao_produto")
                 .leftJoinAndSelect("variacao_produto.produto", "produto")
-                .where("variacao_produto.usuarioId = :usuarioId", { usuarioId: usuario.id })
                 .orderBy('variacao_produto.descricao', 'ASC')
                 .getMany()
         }
@@ -43,7 +42,6 @@ export class VariacaoProdutoService {
                 .createQueryBuilder("variacao_produto")
                 .leftJoinAndSelect("variacao_produto.produto", "produto")
                 .where("variacao_produto.id = :id", { id: id })
-                .andWhere("variacao_produto.usuarioId = :usuarioId", { usuarioId: usuario.id })
                 .getOne()
         }
         return null
@@ -57,7 +55,6 @@ export class VariacaoProdutoService {
                 .createQueryBuilder("variacao_produto")
                 .leftJoinAndSelect("variacao_produto.produto", "produto")
                 .where("variacao_produto.produtoId = :produtoId", { produtoId: produtoId })
-                .andWhere("variacao_produto.usuarioId = :usuarioId", { usuarioId: usuario.id })
                 .orderBy('variacao_produto.descricao', 'ASC')
                 .getMany()
         }
@@ -68,7 +65,6 @@ export class VariacaoProdutoService {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-            inserirVariacaoProdutoDto.usuario = usuario.id
             const variacaoProduto = this.variacaoProdutoRepository.create(inserirVariacaoProdutoDto)
             return await this.variacaoProdutoRepository.save(variacaoProduto)
         }
@@ -79,9 +75,9 @@ export class VariacaoProdutoService {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-            const resultadoAtualizacao = await this.variacaoProdutoRepository.update({ id: id, usuario: usuario.id }, atualizarVariacaoProdutoDto)
+            const resultadoAtualizacao = await this.variacaoProdutoRepository.update({ id: id }, atualizarVariacaoProdutoDto)
             if (resultadoAtualizacao.affected > 0) {
-                return await this.variacaoProdutoRepository.findOneBy({id: id, usuario: usuario.id})
+                return await this.variacaoProdutoRepository.findOneBy({id: id })
             }
             throw new EntityNotFoundError(VariacaoProduto, id)
         }
@@ -97,7 +93,7 @@ export class VariacaoProdutoService {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-            const resultadoDelecao = await this.variacaoProdutoRepository.delete({ id: id, usuario: usuario.id })
+            const resultadoDelecao = await this.variacaoProdutoRepository.delete({ id: id })
             if (resultadoDelecao.affected > 0) {
                 return true
             }

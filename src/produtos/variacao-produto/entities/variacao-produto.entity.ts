@@ -19,8 +19,4 @@ export class VariacaoProduto {
     @IsNotEmpty()
     @IsNumber()
     produto: number
-
-    @ManyToOne(type => Usuario, usuario => usuario.id, { nullable: true, eager: false })
-    @IsNumber()
-    usuario: number
 }

@@ -12,7 +12,4 @@ export class InserirVariacaoProdutoDto {
     @IsNumber()
     @IsNotEmpty()
     produtoId: Number
-
-    @IsNumber()
-    usuario: number
 }
