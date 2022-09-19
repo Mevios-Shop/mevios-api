@@ -24,23 +24,30 @@ import { forwardRef, Module } from '@nestjs/common';
 import { StatusVenda } from './status-venda/entities/status-venda.entity';
 import { RastreamentoVendaPorvendaIDController } from './rastreamento-venda/rastreamento-venda-vendaid.controller';
 import { UsuariosModule } from 'src/usuarios/usuarios.module';
+import { StatusVendaPorDescricaoController } from './status-venda/status-venda-por-descricao.controller';
+import { ImportacaoVendaController } from './venda/importacao-venda.controller';
+import { ProdutosModule } from 'src/produtos/produtos.module';
+import { ImportarVendaService } from './venda/importar-venda.service';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([ StatusVenda, Venda, ItemVenda, RastreamentoVenda, StatusRastreamentoVenda ]), 
-        forwardRef(() => UsuariosModule)
+        forwardRef(() => UsuariosModule),
+        forwardRef(() => ProdutosModule)
     ],
     controllers: [ 
         StatusVendaController, 
+        StatusVendaPorDescricaoController,
         VendaController, 
         VendaPedidoController,
         VendaPlataformaController, 
+        ImportacaoVendaController,
         ItemVendaController, 
         ItensVendaController, 
         RastreamentoVendaController, 
         StatusRastreamentoVendaController,
         RastreamentoVendaPorvendaIDController
     ],
-    providers: [ StatusVendaService, VendaService, ItemVendaService, RastreamentoVendaService, StatusRastreamentoVendaService ],
+    providers: [ StatusVendaService, VendaService, ImportarVendaService, ItemVendaService, RastreamentoVendaService, StatusRastreamentoVendaService ],
 })
 export class VendasModule {}

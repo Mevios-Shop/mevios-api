@@ -10,7 +10,7 @@ export class InserirRastreamentoVendaDto {
 
     @IsNotEmpty()
     @IsNumber()
-    _venda: number
+    venda: number
 
     @Column({ type: "decimal", nullable: true })
     custo_frete: number
@@ -20,27 +20,24 @@ export class InserirRastreamentoVendaDto {
     plataforma: number
 
     @Column({ type: "datetime", nullable: true })
-    data_envio: Date
+    data_envio?: Date
 
     @Column({ type: "datetime", nullable: true })
-    data_entrega: Date
+    data_entrega?: Date
 
     @IsNumber()
     usuario: number
 
-    constructor(codigo_rastreamento: string, plataformaId: number, usuario: number, vendaId?: number, custo_frete?: number, data_envio?: Date, data_entrega?: Date) {
+    constructor(codigo_rastreamento: string, plataformaId: number, usuario: number, custo_frete: number, vendaId?: number, data_envio?: Date, data_entrega?: Date) {
         this.codigo_rastreamento = codigo_rastreamento
         this.plataforma = plataformaId
-        this._venda = vendaId
-        this.custo_frete = custo_frete
+        this.venda = vendaId
+        if (custo_frete) {
+            this.custo_frete = custo_frete
+        }
         this.data_envio = data_envio
         this.data_entrega = data_entrega
         this.usuario = usuario
-    }
-
-    
-    set venda(venda : number) {
-        this._venda = venda;
     }
     
 }

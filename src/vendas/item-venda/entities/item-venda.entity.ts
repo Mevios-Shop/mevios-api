@@ -31,19 +31,14 @@ export class ItemVenda {
     @Column({ type: "decimal", precision: 10, scale: 2 })
     valor: number
 
-    @IsNotEmpty()
-    @Column({ type: "decimal" , nullable: true, precision: 10, scale: 2 })
-    comissao: number
-
     @ManyToOne(type => Usuario, usuario => usuario.id, { nullable: false, eager: false })
     @IsNumber()
     usuario: number
 
-    constructor(estoqueId: number, vendaId: number, valor: number, usuario: number, comissao?: number) {
+    constructor(estoqueId: number, vendaId: number, valor: number, usuario: number) {
         this.estoque = estoqueId
         this.venda = vendaId
         this.valor = valor
         this.usuario = usuario
-        this.comissao = comissao
     }
 }

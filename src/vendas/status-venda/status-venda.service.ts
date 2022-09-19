@@ -27,7 +27,7 @@ export class StatusVendaService {
         if (usuario) {
             return await this.statusVendaRepository
                 .createQueryBuilder("status_venda")
-                .orderBy('status_venda.data', 'DESC')
+                .orderBy('status_venda.descricao', 'DESC')
                 .getMany()
         } else {
             return null
@@ -41,6 +41,19 @@ export class StatusVendaService {
             return await this.statusVendaRepository
                 .createQueryBuilder("status_venda")
                 .where("status_venda.id = :id", { id: id })
+                .getOne()
+        } else {
+            return null
+        }
+    }
+
+    async buscarStatusVendaPorDescricao(descricao: string, user: any): Promise<StatusVenda> {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
+
+        if (usuario) {
+            return await this.statusVendaRepository
+                .createQueryBuilder("status_venda")
+                .where("status_venda.descricao = :descricao", { descricao: descricao })
                 .getOne()
         } else {
             return null

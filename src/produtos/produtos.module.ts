@@ -33,6 +33,7 @@ import { UsuariosModule } from 'src/usuarios/usuarios.module';
       SkuId_variacaoController, 
       EstoqueDisponivelController
     ],
-    providers: [ProdutosService, VariacaoProdutoService, EstoqueService, SkuProdutoService ]
+    providers: [ProdutosService, VariacaoProdutoService, EstoqueService, SkuProdutoService ],
+    exports: [ EstoqueService ]
   })
   export class ProdutosModule {}

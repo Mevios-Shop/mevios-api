@@ -14,16 +14,17 @@ export class EstoqueDisponivelController {
         
     }
 
-    @Get(':id/:quantidade')
+    @Get(':variacaoProdutoId/:quantidade')
     @UseGuards(JwtAuthGuard)
     buscarProdutosDisponiveisPorVariacaoId(@Param() params, @Request() req): Promise<Estoque[]> {
-        return this.estoqueService.buscarProdutosDisponiveisPorVariacaoId(params.id, params.quantidade, req.user).then(
+        return this.estoqueService.buscarProdutosDisponiveisPorVariacaoId(params.variacaoProdutoId, params.quantidade, req.user).then(
             ((resposta: any) => {
                 let contador: any = 0
                 for (let i = 0; i < resposta.length; i++) {
                     contador++
-                    
                 }
+
+                console.log('lenght: ', resposta.length)
 
                 if (contador == params.quantidade) {
                     return resposta

@@ -13,6 +13,10 @@ export class Venda {
     @Column({ type: "datetime" })
     data: Date
 
+    @IsNotEmpty()
+    @Column({ type: "decimal" , nullable: true, precision: 10, scale: 2 })
+    comissao: number
+
     @Column({ type: "decimal", nullable: true })
     valor_frete: number
 
@@ -39,11 +43,20 @@ export class Venda {
     @IsNumber()
     usuario: number
 
-    constructor(data: Date, codigo_pedido: string, plataformaId: number, status_vendaId: number, usuario: number, valor_frete?: number, valor_reembolso?: number) {
+    constructor(data: Date, codigo_pedido: string, plataformaId: number, status_vendaId: number, usuario: number, comissao, valor_frete: number, valor_reembolso: number) {
         this.data = data
-        this.valor_frete = valor_frete
-        this.valor_reembolso = valor_reembolso
-        this.codigo_pedido = codigo_pedido
+        if (comissao > 0) {
+            this.comissao = comissao
+        }
+        if (valor_frete > 0) {
+            this.valor_frete = valor_frete
+        }
+        if (valor_reembolso > 0) {
+            this.valor_reembolso = valor_reembolso
+        }
+        if (codigo_pedido) {
+            this.codigo_pedido = codigo_pedido
+        }
         this.plataforma = plataformaId
         this.status_venda = status_vendaId
         this.usuario = usuario

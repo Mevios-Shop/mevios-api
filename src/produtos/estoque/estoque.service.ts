@@ -102,7 +102,40 @@ export class EstoqueService {
 
     }
 
-    async buscarProdutosDisponiveisPorVariacaoId(variacaoId: number, quantidade: number, user: any): Promise<Estoque> {
+    async buscarProdutoDisponivelPorVariacaoId(variacaoProdutoId: number, user: any): Promise<Estoque> {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
+
+        if (usuario) {
+            return await this.estoqueRepository
+                .createQueryBuilder("estoque")
+                .leftJoinAndSelect("estoque.variacao_produto", "variacao_produto")
+                .leftJoinAndSelect("estoque.item_compra", "item_compra")
+                .where("estoque.usuarioId = :usuarioId", { usuarioId: usuario.id })
+                .andWhere("estoque.variacaoProdutoId = :variacaoProdutoId", { variacaoProdutoId: variacaoProdutoId })
+                .andWhere("estoque.id NOT IN (SELECT estoqueId FROM bd_api_vendas.item_venda)")
+                .getOne()
+        }
+    }
+
+    async buscarProdutosDisponiveisPorVariacaoId(variacaoId: number, quantidade: number, user: any): Promise<Estoque[]> {
+        const usuario = await this.usuarioService.buscarPorEmail(user.email)
+
+        if (usuario) {
+            return await this.estoqueRepository
+                .createQueryBuilder("estoque")
+                .leftJoinAndSelect("estoque.variacao_produto", "variacao_produto")
+                .leftJoinAndSelect("estoque.item_compra", "item_compra")
+                .where("estoque.usuarioId = :usuarioId", { usuarioId: usuario.id })
+                .andWhere("estoque.variacaoProdutoId = :variacaoProdutoId", { variacaoProdutoId: variacaoId })
+                .andWhere("estoque.id NOT IN (SELECT estoqueId FROM item_venda)")
+                .limit(quantidade)
+                .getMany()
+        }
+
+        return null
+    }
+
+    async buscarProdutosDisponiveisPorVariacaoId2(variacaoId: number, quantidade: number, user: any): Promise<Estoque> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
@@ -112,9 +145,9 @@ export class EstoqueService {
                 INNER JOIN bd_api_vendas.variacao_produto	AS VP ON vp.id = E.variacaoProdutoId 
                 INNER JOIN bd_api_vendas.produto AS P ON P.id = VP.produtoId 
                 WHERE E.id not in(SELECT estoqueId from bd_api_vendas.item_venda) 
-                AND E.variacaoProdutoId = " + variacaoId + " 
+                AND E.variacaoProdutoId = ${variacaoId.toString()}  
                 ORDER BY	E.data 
-                LIMIT " + quantidade + ";
+                LIMIT ${quantidade.toString()};
             `)
 
         }
