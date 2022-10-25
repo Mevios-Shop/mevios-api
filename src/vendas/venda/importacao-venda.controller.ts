@@ -17,6 +17,10 @@ export class ImportacaoVendaController {
     @Post()
     @UseGuards(JwtAuthGuard)
     async importarVendas(@Body() importarVendaDto: ImportarVendaDto[], @Request() req) {
-        return await this.importarVendaService.importarVendas(importarVendaDto, req.user)
+        if (importarVendaDto) {
+            return await this.importarVendaService.importarVendas(importarVendaDto, req.user);
+        } else {
+            return { message: "Nenhuma venda para importar" }
+        }
     }
 }

@@ -41,6 +41,10 @@ export class ImportarVendaService {
             for (let index = 0; index < importarVendasDto.length; index++) {
                 const venda = importarVendasDto[index];
 
+                if (venda.codigo_pedido == '701-3936423-6020222') {
+                    console.log(venda.codigo_pedido)
+                }
+
                 const vendaJaCadastrada = await queryRunner.manager.createQueryBuilder(Venda, "venda")
                     .where("venda.codigo_pedido = :codigo_pedido", { codigo_pedido: venda.codigo_pedido })
                     .getOne();
@@ -135,7 +139,7 @@ export class ImportarVendaService {
             }
 
             let QuantidadeVendasCadastradasComSucesso: number = 0
-
+8
             for (let index = 0; index < importarVendasDto.length; index++) {
                 const venda = importarVendasDto[index];
 
