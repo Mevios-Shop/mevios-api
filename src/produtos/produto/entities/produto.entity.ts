@@ -1,6 +1,4 @@
-import { IsNumber } from "class-validator";
-import { Usuario } from "src/usuarios/entities/usuario.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Produto {
@@ -11,7 +9,7 @@ export class Produto {
     @Column()
     nome: string
 
-    @Column('boolean', {default: true})
+    @Column('boolean', { default: true })
     habilitado: boolean
 
     constructor(nome: string, habilitado: boolean) {

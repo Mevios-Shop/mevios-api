@@ -4,8 +4,6 @@ https://docs.nestjs.com/providers#services
 
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Plataforma } from 'src/plataformas/entities/plataforma.entity';
-import { Usuario } from 'src/usuarios/entities/usuario.entity';
 import { UsuarioService } from 'src/usuarios/usuario.service';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { StatusCompra } from '../status_compra/entities/status-compra.entity';
@@ -24,7 +22,7 @@ export class ComprasService {
 
     }
 
-    async buscarCompras(user: any): Promise<Compra[]> {
+    async buscar(user: any): Promise<Compra[]> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
@@ -36,16 +34,6 @@ export class ComprasService {
                 .where("compra.usuarioId = :usuarioId", { usuarioId: usuario.id })
                 .orderBy('compra.data', 'DESC')
                 .getMany()
-
-            /*
-            return this.compraRepository.find({
-                where: {
-                    usuario: usuario.id
-                },
-                order: {
-                    data: "DESC"
-                }
-            })*/
         } else {
             return null
         }
@@ -53,7 +41,7 @@ export class ComprasService {
 
     }
 
-    async buscarCompraPorId(id: number, user: any): Promise<Compra> {
+    async buscarPorId(id: number, user: any): Promise<Compra> {
 
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
@@ -71,8 +59,7 @@ export class ComprasService {
         return this.compraRepository.findOneBy({ id, usuario: user.id })
     }
 
-    //.leftJoinAndSelect(StatusCompra, "statusCompra", "statusCompra.id = compra.statusCompraId")
-    async buscarComprasPorStatusCompraId(id: number, user: any): Promise<Compra[]> {
+    async buscarPorStatusCompraId(id: number, user: any): Promise<Compra[]> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
@@ -94,22 +81,6 @@ export class ComprasService {
 
         return null
     }
-
-    /*
-    async buscarComprasPorStatusCompraId2(id: number) {
-        return await this.compraRepository.find({
-            relations: {
-                plataforma: true,
-                status_compra: true
-            },
-            where: {
-                status_compra: 5
-            },
-            order: {
-                id: "DESC"
-            }
-        })
-    }*/
 
     async inserir(inserirCompraDto: InserirCompraDto, user: any): Promise<Compra> {
 

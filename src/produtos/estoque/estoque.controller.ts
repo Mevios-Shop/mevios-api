@@ -13,21 +13,12 @@ import { JwtAuthGuard } from 'src/auth/auth.guard';
 export class EstoqueController {
 
     constructor(private estoqueService: EstoqueService) {
-        
+
     }
 
     @Post()
     @UseGuards(JwtAuthGuard)
     inserir(@Body() inserirEstoqueDto: InserirEstoqueDto[], @Request() req) {
-
-        /*
-        inserirEstoqueDto.forEach(element => {
-            try {
-                this.estoqueService.inserir(element)
-            } catch (error) {
-                return error
-            }
-        });*/
 
         return this.estoqueService.inserir(inserirEstoqueDto, req.user)
     }
@@ -35,13 +26,13 @@ export class EstoqueController {
     @Get()
     @UseGuards(JwtAuthGuard)
     async buscar(@Request() req): Promise<Estoque[]> {
-        return await this.estoqueService.buscarTodos(req.user)
+        return await this.estoqueService.buscar(req.user)
     }
 
     @Get(':id')
     @UseGuards(JwtAuthGuard)
     async buscarPorId(@Param() params, @Request() req): Promise<Estoque> {
-        return await  this.estoqueService.buscarPorId(params.id, req.user)
+        return await this.estoqueService.buscarPorId(params.id, req.user)
     }
 
     @Patch(':id')

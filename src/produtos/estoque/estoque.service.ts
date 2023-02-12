@@ -21,7 +21,7 @@ export class EstoqueService {
         private readonly usuarioService: UsuarioService
     ) { }
 
-    async buscarTodos(user: any): Promise<Estoque[]> {
+    async buscar(user: any): Promise<Estoque[]> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
@@ -48,32 +48,10 @@ export class EstoqueService {
         }
     }
 
-    async buscar_produtos_disponiveis_agrupados(user: any): Promise<any[]> {
+    async buscarProdutosDisponiveisAgrupados(user: any): Promise<any[]> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
-
-            console.log(
-                `SELECT 
-                    p.nome AS 'nome',
-                    vp.descricao AS 'descricao',
-                    e.variacaoProdutoId AS 'variacaoProdutoId',
-                    COUNT(e.variacaoProdutoId) AS 'quantidade'
-                FROM
-                    (((bd_api_vendas.estoque e
-                    LEFT JOIN bd_api_vendas.item_venda iv ON ((iv.estoqueId = e.id)))
-                    JOIN bd_api_vendas.variacao_produto vp ON ((vp.id = e.variacaoProdutoId)))
-                    JOIN bd_api_vendas.produto p ON ((p.id = vp.produtoId)))
-                WHERE
-                    e.id IN (SELECT 
-                            bd_api_vendas.item_venda.estoqueId
-                        FROM
-                            bd_api_vendas.item_venda)
-                        IS FALSE
-                    AND e.usuarioId = ${usuario.id}
-                GROUP BY e.variacaoProdutoId
-                ORDER BY p.nome;`
-            )
 
             return await this.estoqueRepository.query(
                 `SELECT 
@@ -135,26 +113,6 @@ export class EstoqueService {
         return null
     }
 
-    async buscarProdutosDisponiveisPorVariacaoId2(variacaoId: number, quantidade: number, user: any): Promise<Estoque> {
-        const usuario = await this.usuarioService.buscarPorEmail(user.email)
-
-        if (usuario) {
-            return await this.estoqueRepository.query(`
-                SELECT E.id FROM bd_api_vendas.estoque AS E 
-                LEFT JOIN bd_api_vendas.item_venda AS iv ON iv.estoqueId = E.id 
-                INNER JOIN bd_api_vendas.variacao_produto	AS VP ON vp.id = E.variacaoProdutoId 
-                INNER JOIN bd_api_vendas.produto AS P ON P.id = VP.produtoId 
-                WHERE E.id not in(SELECT estoqueId from bd_api_vendas.item_venda) 
-                AND E.variacaoProdutoId = ${variacaoId.toString()}  
-                ORDER BY	E.data 
-                LIMIT ${quantidade.toString()};
-            `)
-
-        }
-
-        return null
-    }
-
     async inserir(inserirEstoqueDto: InserirEstoqueDto[], user: any): Promise<Estoque[]> {
         console.log('EstoqueService:inserir...')
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
@@ -166,7 +124,6 @@ export class EstoqueService {
             const itens = await this.estoqueRepository.create(inserirEstoqueDto)
             return await this.estoqueRepository.save(itens)
         }
-
         return null
     }
 

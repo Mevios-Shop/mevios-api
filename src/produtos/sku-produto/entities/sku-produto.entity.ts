@@ -2,8 +2,7 @@ import { Plataforma } from './../../../plataformas/entities/plataforma.entity';
 import { IsNumber } from 'class-validator';
 import { IsNotEmpty } from 'class-validator';
 import { VariacaoProduto } from './../../variacao-produto/entities/variacao-produto.entity';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Usuario } from 'src/usuarios/entities/usuario.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class SkuProduto {
@@ -20,7 +19,7 @@ export class SkuProduto {
     @Column({ type: "text", nullable: false })
     sku: string
 
-    @ManyToOne(type => Plataforma, plataforma => plataforma.id, { nullable: false, eager: true})
+    @ManyToOne(type => Plataforma, plataforma => plataforma.id, { nullable: false, eager: true })
     @IsNotEmpty()
     @IsNumber()
     plataforma: number

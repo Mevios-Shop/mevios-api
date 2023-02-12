@@ -6,17 +6,16 @@ import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Request, U
 import { AuthGuard } from '@nestjs/passport';
 import { AtualizarItemCompraDto } from './dto/atualizar-item-compra.dto';
 import { InserirItemCompraDto } from './dto/inserir-item-compra.dto';
-import { ItemCompra } from './entities/item-compra.entity';
 import { ItemCompraService } from './item-compra.service';
 
 @Controller('item_compra')
 export class ItemCompraController {
 
     constructor(private itemCompraService: ItemCompraService) {
-        
+
     }
 
-    @Post()   
+    @Post()
     @UseGuards(AuthGuard('jwt'))
     inserir(@Body() inserirItemCompraDto: InserirItemCompraDto, @Request() req) {
         return this.itemCompraService.inserir(inserirItemCompraDto, req.user)

@@ -39,7 +39,7 @@ export class VendaService {
 
     }
 
-    async buscarVendas(user: any): Promise<Venda[]> {
+    async buscar(user: any): Promise<Venda[]> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
@@ -54,7 +54,7 @@ export class VendaService {
         return null
     }
 
-    async buscarVendaPorId(id: number, user: any): Promise<Venda> {
+    async buscarPorId(id: number, user: any): Promise<Venda> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
@@ -69,7 +69,7 @@ export class VendaService {
         return null
     }
 
-    async buscarVendasPorIdPlataforma(id_plataforma: number, user: any): Promise<Venda[]> {
+    async buscarPorIdPlataforma(id_plataforma: number, user: any): Promise<Venda[]> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
@@ -85,7 +85,7 @@ export class VendaService {
         return null
     }
 
-    async buscarVendaPorPedido(codigo_pedido: string, user: any): Promise<Venda> {
+    async buscarPorPedido(codigo_pedido: string, user: any): Promise<Venda> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
@@ -101,8 +101,6 @@ export class VendaService {
         return null
     }
 
-    //fazer por transação
-    //: Promise<Venda[]>
     async importarVendas(importarVendasDto: ImportarVendaDto[], user: any): Promise<any> {
 
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
@@ -120,11 +118,11 @@ export class VendaService {
 
                 importarVendasDto.forEach(async (venda) => {
 
-                    const vendaJaCadastrada = await this.buscarVendaPorPedido(venda.codigo_pedido, user)
+                    const vendaJaCadastrada = await this.buscarPorPedido(venda.codigo_pedido, user)
 
                     if (!vendaJaCadastrada) {
 
-                        const status_venda: StatusVenda = await this.statusVendaService.buscarStatusVendaPorDescricao(venda.status_venda, user)
+                        const status_venda: StatusVenda = await this.statusVendaService.buscarPorDescricao(venda.status_venda, user)
                         const inserirVendaDto: InserirVendaDto = {
                             data: venda.data,
                             comissao: venda.comissao,
@@ -178,7 +176,7 @@ export class VendaService {
                 let vendasInseridasComSucesso: boolean = true
 
                 importarVendasDto.forEach(async (venda) => {
-                    const vendaJaCadastrada = await this.buscarVendaPorPedido(venda.codigo_pedido, user)
+                    const vendaJaCadastrada = await this.buscarPorPedido(venda.codigo_pedido, user)
                     if (vendaJaCadastrada) {
                         const itensDaVendaCadastrada = await this.itemVendaService.buscarPorIdVenda(vendaJaCadastrada.id, user)
 
@@ -226,36 +224,6 @@ export class VendaService {
         return null
     }
 
-    /*
-    async inserir2(inserirVendaDto: InserirVendaDto, itensVendaDto: ItensVendaDto, inserirRastreamentoVendaDto: InserirRastreamentoVendaDto, venda_completa: JSON) {
-        
-        const queryRunner = this.connection.createQueryRunner()
-
-        await queryRunner.connect()
-
-        await queryRunner.connect()
-        await queryRunner.startTransaction()
-
-        try {
-            const venda = this.vendaRepository.create(inserirVendaDto)
-
-            await queryRunner.manager.save(inserirVendaDto)
-
-            const vendaId = await queryRunner.query('SELECT id FROM bd_api_vendas.venda WHERE codigo_pedido = ' + inserirVendaDto.codigo_pedido)
-
-            
-            return { "mensagem": "Venda cadastrada com sucesso!", "vendaId": vendaId}
-            
-        } catch (err) {
-            await queryRunner.rollbackTransaction();
-            console.log('err: ', err)
-        } finally {
-            await queryRunner.release();
-        }
-        //const venda = this.VendaRepository.create(inserirVendaDto)
-        //return this.VendaRepository.save(venda)
-
-    }*/
 
     async atualizar(id: number, atualizarVendaDto: AtualizarVendaDto, user: any): Promise<Venda> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)

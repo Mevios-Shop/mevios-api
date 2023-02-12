@@ -12,7 +12,7 @@ import { JwtAuthGuard } from 'src/auth/auth.guard';
 @Controller('sku_produto')
 export class SkuProdutoController {
 
-    constructor(private skuProdutoService: SkuProdutoService) {}
+    constructor(private skuProdutoService: SkuProdutoService) { }
 
     @Post()
     @UseGuards(JwtAuthGuard)
@@ -23,7 +23,7 @@ export class SkuProdutoController {
     @Get()
     @UseGuards(JwtAuthGuard)
     async buscar(@Request() req): Promise<SkuProduto[]> {
-        return await this.skuProdutoService.buscarTodos(req.user)
+        return await this.skuProdutoService.buscar(req.user)
     }
 
     @Get(':id')
