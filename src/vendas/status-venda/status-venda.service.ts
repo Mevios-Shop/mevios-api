@@ -21,7 +21,7 @@ export class StatusVendaService {
 
     }
 
-    async buscarStatusVenda(user: any): Promise<StatusVenda[]> {
+    async buscar(user: any): Promise<StatusVenda[]> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
@@ -34,7 +34,7 @@ export class StatusVendaService {
         }
     }
 
-    async buscarStatusVendaPorId(id: number, user: any): Promise<StatusVenda> {
+    async buscarPorId(id: number, user: any): Promise<StatusVenda> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
@@ -47,7 +47,7 @@ export class StatusVendaService {
         }
     }
 
-    async buscarStatusVendaPorDescricao(descricao: string, user: any): Promise<StatusVenda> {
+    async buscarPorDescricao(descricao: string, user: any): Promise<StatusVenda> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {

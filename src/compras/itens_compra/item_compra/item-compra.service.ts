@@ -4,11 +4,8 @@ https://docs.nestjs.com/providers#services
 
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Compra } from 'src/compras/compra/entities/compra.entity';
-import { VariacaoProduto } from 'src/produtos/variacao-produto/entities/variacao-produto.entity';
 import { UsuarioService } from 'src/usuarios/usuario.service';
 import { EntityNotFoundError, Repository } from 'typeorm';
-import { StatusItemCompra } from '../status_item_compra/entities/status-item-compra.entity';
 import { AtualizarItemCompraDto } from './dto/atualizar-item-compra.dto';
 import { InserirItemCompraDto } from './dto/inserir-item-compra.dto';
 import { ItemCompra } from './entities/item-compra.entity';
@@ -25,7 +22,6 @@ export class ItemCompraService {
     }
 
     async buscarPorIdCompra(compraId: number, user: any): Promise<ItemCompra[]> {
-        //return this.itemCompraRepository.find({ where: { compra: compraId } })
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {

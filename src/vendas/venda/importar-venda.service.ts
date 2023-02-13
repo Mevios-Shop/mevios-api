@@ -1,20 +1,16 @@
 import { forwardRef, HttpException, HttpStatus, Inject } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
 import { Estoque } from "src/produtos/estoque/entities/estoque.entity";
 import { EstoqueService } from "src/produtos/estoque/estoque.service";
 import { UsuarioService } from "src/usuarios/usuario.service";
-import { DataSource, Repository } from "typeorm";
-import { ImportarItemVendaDto } from "../item-venda/dto/importar-item-venda.dto";
+import { DataSource } from "typeorm";
 import { InserirItemVendaDto } from "../item-venda/dto/inserir-item-venda.dto";
 import { ItemVenda } from "../item-venda/entities/item-venda.entity";
 import { InserirRastreamentoVendaDto } from "../rastreamento-venda/dto/inserir-rastreamento-venda.dto";
 import { RastreamentoVenda } from "../rastreamento-venda/entities/rastreamento-venda.entity";
 import { StatusVenda } from "../status-venda/entities/status-venda.entity";
-import { StatusVendaService } from "../status-venda/status-venda.service";
 import { ImportarVendaDto } from "./dto/importar-venda.dto";
 import { InserirVendaDto } from "./dto/inserir-venda.dto";
 import { Venda } from "./entities/venda.entity";
-import { VendaService } from "./venda.service";
 
 export class ImportarVendaService {
     constructor(
@@ -41,7 +37,7 @@ export class ImportarVendaService {
             for (let index = 0; index < importarVendasDto.length; index++) {
                 const venda = importarVendasDto[index];
 
-                if (venda.codigo_pedido == '701-3936423-6020222') {
+                if (venda.codigo_pedido == '220624N436MNDF') {
                     console.log(venda.codigo_pedido)
                 }
 
@@ -50,7 +46,7 @@ export class ImportarVendaService {
                     .getOne();
 
                 if (!vendaJaCadastrada) {
-                    
+
                     const status_venda: StatusVenda = await queryRunner.manager.findOne(StatusVenda, {
                         where: {
                             descricao: venda.status_venda
@@ -74,14 +70,14 @@ export class ImportarVendaService {
                     const vendaInserida = await queryRunner.manager.save(Venda, inserirVendaDto)
 
                     if (!vendaInserida) {
-                        throw new Error("Erro ao inserir venda: " + venda.codigo_pedido);                        
+                        throw new Error("Erro ao inserir venda: " + venda.codigo_pedido);
                     } else {
 
                         for (let index2 = 0; index2 < venda.itensVenda.length; index2++) {
                             const item = venda.itensVenda[index2];
-                            
+
                             const listaEstoqueDisponivel2: Estoque[] = await this.estoqueService.buscarProdutosDisponiveisPorVariacaoId(item.variacao_produto, item.quantidade, user)
-    
+
                             const listaEstoqueDisponivel: Estoque[] = await queryRunner.manager.createQueryBuilder(Estoque, "estoque")
                                 .where("estoque.variacao_produto = :variacao_produto", { variacao_produto: item.variacao_produto })
                                 .andWhere("estoque.usuario = :usuario", { usuario: usuario.id })
@@ -96,7 +92,7 @@ export class ImportarVendaService {
                                 let itensInseridos: ItemVenda[] = []
 
                                 for (let index3 = 0; index3 < item.quantidade; index3++) {
-    
+
                                     const inserirItemVendaDto: InserirItemVendaDto = {
                                         valor: item.valor,
                                         variacao_produto: item.variacao_produto,
@@ -104,16 +100,16 @@ export class ImportarVendaService {
                                         estoque: listaEstoqueDisponivel[index3].id,
                                         usuario: usuario.id
                                     }
-    
+
                                     const itemInserido = await queryRunner.manager.save(ItemVenda, inserirItemVendaDto)
 
                                     itensInseridos.push(itemInserido)
-    
+
                                 }
-    
+
                                 if (itensInseridos.length != item.quantidade) {
                                     throw new Error("Erro ao importar itens da venda " + venda.codigo_pedido)
-                                } 
+                                }
                             }
                         }
 
@@ -135,11 +131,11 @@ export class ImportarVendaService {
                     }
 
 
-                }                
+                }
             }
 
             let QuantidadeVendasCadastradasComSucesso: number = 0
-8
+            8
             for (let index = 0; index < importarVendasDto.length; index++) {
                 const venda = importarVendasDto[index];
 
@@ -152,8 +148,8 @@ export class ImportarVendaService {
                 } else {
 
                     const itensVendaJaCadastrado: ItemVenda[] = await queryRunner.manager.createQueryBuilder(ItemVenda, "itemVenda")
-                    .where("itemVenda.venda = :venda", { venda: vendaJaCadastrada.id })
-                    .getMany();
+                        .where("itemVenda.venda = :venda", { venda: vendaJaCadastrada.id })
+                        .getMany();
 
                     const somaItensVenda = venda.itensVenda.reduce((a, b) => a + b.quantidade, 0)
 
@@ -162,18 +158,18 @@ export class ImportarVendaService {
                     } else {
                         if (venda.codigo_rastreamento) {
                             const rastreamentoVendaJaCadastrado = await queryRunner.manager.createQueryBuilder(RastreamentoVenda, "rastreamentoVenda")
-                            .where("rastreamentoVenda.venda = :venda", { venda: vendaJaCadastrada.id })
-                            .getOne();
+                                .where("rastreamentoVenda.venda = :venda", { venda: vendaJaCadastrada.id })
+                                .getOne();
 
                             if (!rastreamentoVendaJaCadastrado) {
                                 throw new Error("Erro ao importar rastreamento da venda " + venda.codigo_pedido)
                             }
-                        } 
+                        }
 
                         QuantidadeVendasCadastradasComSucesso++
                     }
                 }
-                
+
             }
 
             if (QuantidadeVendasCadastradasComSucesso == importarVendasDto.length) {
@@ -182,7 +178,7 @@ export class ImportarVendaService {
                     mensagem: "Vendas importadas com sucesso"
                 }
             } else {
-                
+
                 throw new Error("Erro ao importar vendas: " + QuantidadeVendasCadastradasComSucesso + " vendas importadas com sucesso de " + importarVendasDto.length)
             }
 
@@ -192,8 +188,8 @@ export class ImportarVendaService {
             await queryRunner.release();
             console.log(error)
             return new HttpException({ message: 'Não foi possível inserir as vendas' }, HttpStatus.BAD_REQUEST);
-        } 
-        
+        }
+
         /*finally {
             await queryRunner.release();
         }*/

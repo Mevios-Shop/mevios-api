@@ -2,7 +2,7 @@ import { IsNotEmpty, IsNumber } from "class-validator";
 import { ItemCompra } from "src/compras/itens_compra/item_compra/entities/item-compra.entity";
 import { VariacaoProduto } from "src/produtos/variacao-produto/entities/variacao-produto.entity";
 import { Usuario } from "src/usuarios/entities/usuario.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Estoque {
@@ -15,7 +15,7 @@ export class Estoque {
     @IsNumber()
     variacao_produto: number
 
-    @ManyToOne(type => ItemCompra, item_compra => item_compra.id, { nullable: false })
+    @OneToOne(type => ItemCompra, item_compra => item_compra.id, { nullable: false })
     @IsNotEmpty()
     @IsNumber()
     item_compra: number

@@ -7,15 +7,15 @@ import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { StatusVendaService } from './status-venda.service';
 
 @Controller('status_venda_por_descricao')
-export class StatusVendaPorDescricaoController { 
+export class StatusVendaPorDescricaoController {
 
     constructor(private statusVendaService: StatusVendaService) {
-        
+
     }
 
     @Get(':descricao')
     @UseGuards(JwtAuthGuard)
     async buscarStatusVendaPorId(@Param() params, @Request() req) {
-        return await this.statusVendaService.buscarStatusVendaPorDescricao(params.descricao, req.user)
+        return await this.statusVendaService.buscarPorDescricao(params.descricao, req.user)
     }
 }

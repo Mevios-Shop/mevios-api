@@ -10,9 +10,9 @@ import { StatusCompra } from './entities/status-compra.entity';
 import { StatusCompraService } from './status-compra.service';
 
 @Controller('status_compra')
-export class StatusCompraController { 
+export class StatusCompraController {
     constructor(private statusCompraService: StatusCompraService) {
-        
+
     }
 
     @Post()
@@ -24,13 +24,13 @@ export class StatusCompraController {
     @Get()
     @UseGuards(JwtAuthGuard)
     async buscarStatusCompra(@Request() req): Promise<StatusCompra[]> {
-        return await this.statusCompraService.buscarStatusCompra(req.user)
+        return await this.statusCompraService.buscar(req.user)
     }
 
     @Get(':id')
     @UseGuards(JwtAuthGuard)
     async buscarStatusCompraPorId(@Param() params, @Request() req) {
-        return await this.statusCompraService.buscarStatusCompraPorId(params.id, req.user)
+        return await this.statusCompraService.buscarPorId(params.id, req.user)
     }
 
     @Patch(':id')

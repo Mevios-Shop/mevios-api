@@ -13,7 +13,7 @@ import { VariacaoProdutoService } from './variacao-produto.service';
 export class VariacaoProdutoController {
 
     constructor(private variacaoProdutoService: VariacaoProdutoService) {
-        
+
     }
 
     @Post()
@@ -25,15 +25,15 @@ export class VariacaoProdutoController {
     @Get()
     @UseGuards(JwtAuthGuard)
     async buscarVariacoes(@Request() req): Promise<VariacaoProduto[]> {
-        return await this.variacaoProdutoService.buscarVariacoes(req.user)
+        return await this.variacaoProdutoService.buscar(req.user)
     }
- 
+
     @Get(':id')
     @UseGuards(JwtAuthGuard)
     async buscarVariacaoPorId(@Param() params, @Request() req) {
-        return await this.variacaoProdutoService.buscarVariacaoPorId(params.id, req.user)
+        return await this.variacaoProdutoService.buscarPorId(params.id, req.user)
     }
-    
+
     @Patch(':id')
     @UseGuards(JwtAuthGuard)
     async atualizar(@Param('id') id: string, @Body() atualizarVariacaoProdutoDto: AtualizarVariacaoProdutoDto, @Request() req) {

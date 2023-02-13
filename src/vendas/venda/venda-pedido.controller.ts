@@ -9,12 +9,12 @@ import { JwtAuthGuard } from 'src/auth/auth.guard';
 @Controller('venda_pedido')
 export class VendaPedidoController {
 
-    constructor(private VendasService: VendaService) {}
+    constructor(private VendasService: VendaService) { }
 
     @Get(':codigo_pedido')
     @UseGuards(JwtAuthGuard)
     async buscarVendaPorId(@Param() params, @Request() req) {
-        return await this.VendasService.buscarVendaPorPedido(params.codigo_pedido, req.user).then(
+        return await this.VendasService.buscarPorPedido(params.codigo_pedido, req.user).then(
             ((resposta: any) => {
                 if (resposta) {
                     return resposta

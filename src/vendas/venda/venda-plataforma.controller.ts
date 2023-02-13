@@ -11,12 +11,12 @@ import { JwtAuthGuard } from 'src/auth/auth.guard';
 export class VendaPlataformaController {
 
     constructor(private VendasService: VendaService) {
-        
+
     }
 
     @Get(':id_plataforma')
     @UseGuards(JwtAuthGuard)
     async buscarVendaPorId(@Param() params, @Request() req) {
-        return await this.VendasService.buscarVendasPorIdPlataforma(params.id_plataforma, req.user)
+        return await this.VendasService.buscarPorIdPlataforma(params.id_plataforma, req.user)
     }
 }

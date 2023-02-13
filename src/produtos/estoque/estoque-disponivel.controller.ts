@@ -11,7 +11,7 @@ import { EstoqueService } from './estoque.service';
 export class EstoqueDisponivelController {
 
     constructor(private estoqueService: EstoqueService) {
-        
+
     }
 
     @Get(':variacaoProdutoId/:quantidade')
@@ -29,9 +29,9 @@ export class EstoqueDisponivelController {
                 if (contador == params.quantidade) {
                     return resposta
                 } else {
-                    return { "mensagem" : "Estoque insuficiente!"}
+                    return { "mensagem": "Estoque insuficiente!" }
                 }
-                
+
             })
         )
     }
@@ -39,6 +39,6 @@ export class EstoqueDisponivelController {
     @Get()
     @UseGuards(JwtAuthGuard)
     async buscar_produtos_disponiveis_agrupados(@Request() req): Promise<any[]> {
-        return await this.estoqueService.buscar_produtos_disponiveis_agrupados(req.user)
+        return await this.estoqueService.buscarProdutosDisponiveisAgrupados(req.user)
     }
 }

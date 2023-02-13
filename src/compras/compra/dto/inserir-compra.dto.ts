@@ -1,10 +1,9 @@
-import { IsDate, IsDecimal, IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator"
-import { Plataforma } from "src/plataformas/entities/plataforma.entity"
-import { Column, ManyToOne } from "typeorm"
+import { IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator"
+import { Column } from "typeorm"
 
 export class InserirCompraDto {
 
-    @IsNotEmpty({message: "O campo data não pode ser vazio"})
+    @IsNotEmpty({ message: "O campo data não pode ser vazio" })
     data: string
 
     @Column({ type: "datetime" })

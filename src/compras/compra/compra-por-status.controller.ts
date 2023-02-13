@@ -10,16 +10,13 @@ import { ComprasService } from './compras.service';
 @Controller('compra-por-status')
 export class CompraPorStatusController {
 
-    constructor(
-        private comprasService: ComprasService,
-        private itemCompraService: ItemCompraService
-    ) {
-        
+    constructor(private comprasService: ComprasService) {
+
     }
-    
+
     @Get(':id')
     @UseGuards(JwtAuthGuard)
     buscarCompraPorId(@Param() params, @Request() req) {
-        return this.comprasService.buscarComprasPorStatusCompraId(Number(params.id), req.user)
+        return this.comprasService.buscarPorStatusCompraId(Number(params.id), req.user)
     }
 }

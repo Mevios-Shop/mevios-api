@@ -21,7 +21,7 @@ export class VariacaoProdutoService {
 
     }
 
-    async buscarVariacoes(user: any) {
+    async buscar(user: any) {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
@@ -34,7 +34,7 @@ export class VariacaoProdutoService {
         return null
     }
 
-    async buscarVariacaoPorId(id: number, user: any): Promise<VariacaoProduto> {
+    async buscarPorId(id: number, user: any): Promise<VariacaoProduto> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
@@ -47,7 +47,7 @@ export class VariacaoProdutoService {
         return null
     }
 
-    async buscarVariacoesPorIdProduto(produtoId: number, user: any): Promise<VariacaoProduto[]> {
+    async buscarPorIdProduto(produtoId: number, user: any): Promise<VariacaoProduto[]> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
@@ -77,16 +77,10 @@ export class VariacaoProdutoService {
         if (usuario) {
             const resultadoAtualizacao = await this.variacaoProdutoRepository.update({ id: id }, atualizarVariacaoProdutoDto)
             if (resultadoAtualizacao.affected > 0) {
-                return await this.variacaoProdutoRepository.findOneBy({id: id })
+                return await this.variacaoProdutoRepository.findOneBy({ id: id })
             }
             throw new EntityNotFoundError(VariacaoProduto, id)
         }
-        /*
-        const resultadoAtualizacao = await this.variacaoProdutoRepository.update(id, atualizarVariacaoProdutoDto)
-        if (!(await resultadoAtualizacao).affected) {
-            throw new EntityNotFoundError(VariacaoProduto, id)
-        }
-        return this.variacaoProdutoRepository.findOneBy({ id })*/
     }
 
     async deletar(id: number, user: any) {
@@ -99,11 +93,5 @@ export class VariacaoProdutoService {
             }
             throw new EntityNotFoundError(VariacaoProduto, id)
         }
-
-        /*
-        const resultadoDelecao = await this.variacaoProdutoRepository.delete(id)
-        if (!(await resultadoDelecao).affected) {
-            throw new EntityNotFoundError(VariacaoProduto, id)
-        }*/
     }
 }

@@ -2,7 +2,7 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Patch, Post, Request,UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { ResultDto } from 'src/shared/result.dto';
 import { ItemCompraService } from '../itens_compra/item_compra/item-compra.service';
@@ -12,13 +12,13 @@ import { InserirCompraDto } from './dto/inserir-compra.dto';
 import { Compra } from './entities/compra.entity';
 
 @Controller('compras')
-export class ComprasController { 
+export class ComprasController {
 
     constructor(
         private comprasService: ComprasService,
         private itemCompraService: ItemCompraService
     ) {
-        
+
     }
 
     @Post()
@@ -33,14 +33,14 @@ export class ComprasController {
 
     @Get()
     @UseGuards(JwtAuthGuard)
-    async buscarCompras(@Request() req): Promise<Compra[]> {
-        return await this.comprasService.buscarCompras(req.user)
+    async buscar(@Request() req): Promise<Compra[]> {
+        return await this.comprasService.buscar(req.user)
     }
 
     @Get(':id')
     @UseGuards(JwtAuthGuard)
-    async buscarCompraPorId(@Param() params, @Request() req) {
-        return await this.comprasService.buscarCompraPorId(params.id, req.user)
+    async buscarPorId(@Param() params, @Request() req) {
+        return await this.comprasService.buscarPorId(params.id, req.user)
     }
 
     @Patch(':id')
@@ -53,10 +53,7 @@ export class ComprasController {
     @UseGuards(JwtAuthGuard)
     @HttpCode(204)
     async deletar(@Param('id') id: number, @Request() req) {
-
-        
         await this.itemCompraService.deletarPorIdCompra(id, req.user)
-
         return await this.comprasService.deletar(id, req.user)
     }
 }

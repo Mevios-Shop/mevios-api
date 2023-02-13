@@ -10,7 +10,7 @@ import { Plataforma } from './entities/plataforma.entity';
 import { PlataformasService } from './plataformas.service';
 
 @Controller("plataformas")
-export class PlataformasController { 
+export class PlataformasController {
 
     constructor(private plataformasService: PlataformasService) { }
 
@@ -23,7 +23,7 @@ export class PlataformasController {
     @Get()
     @UseGuards(JwtAuthGuard)
     async buscarPlataformas(@Request() req): Promise<Plataforma[]> {
-        return await this.plataformasService.buscarTodos(req.user)
+        return await this.plataformasService.buscar(req.user)
     }
 
     @Get(':id')
