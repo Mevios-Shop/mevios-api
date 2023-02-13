@@ -2,7 +2,7 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Request, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Request, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { AtualizarStatusItemCompraDto } from './dto/atualizar-status-item-compra.dto';
 import { InserirStatusItemCompraDto } from './dto/inserir-status-item-compra.dto';
@@ -13,7 +13,7 @@ import { StatusItemCompraService } from './status-item-compra.service';
 export class StatusItemCompraController {
 
     constructor(private statusItemCompraService: StatusItemCompraService) {
-        
+
     }
 
     @Post()

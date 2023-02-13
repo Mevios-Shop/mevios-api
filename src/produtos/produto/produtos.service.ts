@@ -19,7 +19,7 @@ export class ProdutosService {
         private readonly usuarioService: UsuarioService
     ) { }
 
-    async buscarTodos(user: any): Promise<Produto[]> {
+    async buscar(user: any): Promise<Produto[]> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {

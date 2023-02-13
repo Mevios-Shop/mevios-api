@@ -1,7 +1,7 @@
 import { VariacaoProduto } from './../../../produtos/variacao-produto/entities/variacao-produto.entity';
 import { Venda } from './../../venda/entities/venda.entity';
 import { Estoque } from './../../../produtos/estoque/entities/estoque.entity';
-import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { IsNotEmpty, IsNumber } from 'class-validator';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
 
@@ -10,9 +10,9 @@ export class ItemVenda {
 
     @PrimaryGeneratedColumn()
     id: number
-    
-    @ManyToOne(type => Estoque, estoque => estoque.id, { nullable: false, })
-    @Unique(['estoque', 'ItemVenda'])
+
+    @OneToOne(type => Estoque, estoque => estoque.id, { nullable: false })
+    @JoinColumn()
     @IsNotEmpty()
     @IsNumber()
     estoque: number

@@ -11,12 +11,12 @@ import { VariacaoProdutoService } from './variacao-produto.service';
 export class VariacoesProdutoController {
 
     constructor(private variacaoProdutoService: VariacaoProdutoService) {
-        
+
     }
-    
+
     @Get(':produtoId')
     @UseGuards(JwtAuthGuard)
     async buscarVariacoesPorProduto(@Param('produtoId') produtoId: string, @Request() req): Promise<VariacaoProduto[]> {
-        return await this.variacaoProdutoService.buscarVariacoesPorIdProduto(Number(produtoId), req.user)
+        return await this.variacaoProdutoService.buscarPorIdProduto(Number(produtoId), req.user)
     }
 }

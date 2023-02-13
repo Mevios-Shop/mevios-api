@@ -19,7 +19,7 @@ export class SkuProdutoService {
         private readonly usuarioService: UsuarioService
     ) { }
 
-    async buscarTodos(user: any): Promise<SkuProduto[]> {
+    async buscar(user: any): Promise<SkuProduto[]> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {
@@ -96,11 +96,5 @@ export class SkuProdutoService {
             }
         }
         return null
-
-        /*
-        const resultadoDelecao = await this.skuProdutoRepository.delete(id)
-        if (!(await resultadoDelecao).affected) {
-            throw new EntityNotFoundError(SkuProduto, id)
-        }*/
     }
 }

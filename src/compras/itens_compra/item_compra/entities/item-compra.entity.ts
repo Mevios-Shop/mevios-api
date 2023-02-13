@@ -1,16 +1,16 @@
-import { IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { Compra } from "src/compras/compra/entities/compra.entity";
 import { VariacaoProduto } from "src/produtos/variacao-produto/entities/variacao-produto.entity";
 import { Usuario } from "src/usuarios/entities/usuario.entity";
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { StatusItemCompra } from "../../status_item_compra/entities/status-item-compra.entity";
 
 @Entity()
 export class ItemCompra {
-    
+
     @PrimaryGeneratedColumn()
     id: number
-    
+
     @ManyToOne(type => VariacaoProduto, variacao_produto => variacao_produto.id, { nullable: false, eager: true })
     @IsNotEmpty()
     @IsNumber()

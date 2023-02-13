@@ -1,5 +1,4 @@
 import { RastreamentoVendaService } from './../rastreamento-venda/rastreamento-venda.service';
-import { RastreamentoVenda } from './../rastreamento-venda/entities/rastreamento-venda.entity';
 import { ItemVendaService } from './../item-venda/item-venda.service';
 /*
 https://docs.nestjs.com/controllers#controllers
@@ -16,11 +15,8 @@ import { JwtAuthGuard } from 'src/auth/auth.guard';
 export class VendaController {
 
     constructor(
-        private vendasService: VendaService, 
-        private itemVendaService: ItemVendaService, 
-        private rastreamentoVendaService: RastreamentoVendaService
-    ) {
-        
+        private vendasService: VendaService) {
+
     }
 
     @Post()
@@ -31,14 +27,14 @@ export class VendaController {
 
     @Get()
     @UseGuards(JwtAuthGuard)
-    async buscarVendas(@Request() req): Promise<Venda[]> {
-        return await this.vendasService.buscarVendas(req.user)
+    async buscar(@Request() req): Promise<Venda[]> {
+        return await this.vendasService.buscar(req.user)
     }
 
     @Get(':id')
     @UseGuards(JwtAuthGuard)
-    async buscarVendaPorId(@Param() params, @Request() req) {
-        return await this.vendasService.buscarVendaPorId(params.id, req.user)
+    async buscarPorId(@Param() params, @Request() req) {
+        return await this.vendasService.buscarPorId(params.id, req.user)
     }
 
     @Patch(':id')

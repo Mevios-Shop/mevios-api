@@ -12,7 +12,7 @@ import { JwtAuthGuard } from 'src/auth/auth.guard';
 export class StatusVendaController {
 
     constructor(private statusVendaService: StatusVendaService) {
-        
+
     }
 
     @Post()
@@ -24,13 +24,13 @@ export class StatusVendaController {
     @Get()
     @UseGuards(JwtAuthGuard)
     async buscarStatusVenda(@Request() req): Promise<StatusVenda[]> {
-        return await this.statusVendaService.buscarStatusVenda(req.user)
+        return await this.statusVendaService.buscar(req.user)
     }
 
     @Get(':id')
     @UseGuards(JwtAuthGuard)
     async buscarStatusVendaPorId(@Param() params, @Request() req) {
-        return await this.statusVendaService.buscarStatusVendaPorId(params.id, req.user)
+        return await this.statusVendaService.buscarPorId(params.id, req.user)
     }
 
     @Patch(':id')

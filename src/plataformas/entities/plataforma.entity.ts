@@ -1,6 +1,5 @@
-import { IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator";
-import { Usuario } from "src/usuarios/entities/usuario.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { IsNotEmpty, IsString, MaxLength } from "class-validator";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Plataforma {

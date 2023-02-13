@@ -30,7 +30,7 @@ export class PlataformasService {
         }
     }
 
-    async buscarTodos(user: any): Promise<Plataforma[]> {
+    async buscar(user: any): Promise<Plataforma[]> {
         const usuario = await this.usuarioService.buscarPorEmail(user.email)
 
         if (usuario) {

@@ -1,24 +1,22 @@
-import { StatusRastreamentoVenda } from './../../status-rastreamento-venda/entities/status-rastreamento-venda.entity';
 import { IsNumber } from 'class-validator';
 import { IsNotEmpty } from 'class-validator';
 import { Venda } from './../../venda/entities/venda.entity';
 import { MaxLength } from 'class-validator';
 import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { type } from 'os';
 import { Plataforma } from 'src/plataformas/entities/plataforma.entity';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
 
 @Entity()
 export class RastreamentoVenda {
-    
+
     @PrimaryGeneratedColumn()
     id: number
 
     @MaxLength(45)
-    @Column({type: 'varchar', nullable: true, unique: true })
+    @Column({ type: 'varchar', nullable: true, unique: true })
     codigo_rastreamento: string
 
-    @ManyToOne(type => Venda, venda => venda.id, { nullable: false })
+    @OneToOne(type => Venda, venda => venda.id, { nullable: false })
     @IsNotEmpty()
     @IsNumber()
     venda: number

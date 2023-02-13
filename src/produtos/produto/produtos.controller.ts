@@ -13,7 +13,7 @@ import { ProdutosService } from './produtos.service';
 export class ProdutosController {
 
     constructor(private produtosService: ProdutosService) {
-        
+
     }
 
     @Post()
@@ -26,7 +26,7 @@ export class ProdutosController {
     @Get()
     @UseGuards(JwtAuthGuard)
     async buscarProdutos(@Request() req): Promise<Produto[]> {
-        return await this.produtosService.buscarTodos(req.user)
+        return await this.produtosService.buscar(req.user)
     }
 
     @Get(':id')
@@ -48,5 +48,5 @@ export class ProdutosController {
         return await this.produtosService.deletar(+id, req.user)
     }
 
-    
+
 }

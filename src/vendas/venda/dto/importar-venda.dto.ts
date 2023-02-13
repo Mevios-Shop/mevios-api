@@ -1,4 +1,4 @@
-import { IsArray, IsDate, isInt, IsInt, IsNotEmpty, IsNumber, IsPositive, IsString, MinLength } from "class-validator";
+import { IsArray, IsDate, IsInt, IsNotEmpty, IsNumber, IsPositive, IsString, MinLength } from "class-validator";
 import { ImportarItemVendaDto } from "src/vendas/item-venda/dto/importar-item-venda.dto";
 
 export class ImportarVendaDto {
@@ -42,10 +42,10 @@ export class ImportarVendaDto {
 
     @IsNumber({}, { message: 'O campo "valor_frete" deve ser um número' })
     valor_frete?: number;
-    
+
     @IsNumber({}, { message: 'O campo "valor_reembolso" deve ser um número' })
     valor_reembolso?: number;
 
-    
+
 
 }
